@@ -39,7 +39,7 @@ const configure = {
   },
   devtool: TARGET === 'develop' ? 'eval-source-map' : undefined,
   plugins: [
-    new webpack.EnvironmentPlugin(['FIREBASE_URL', 'FIREBASE_SECRET']),
+    new webpack.EnvironmentPlugin(['FIREBASE_URL', 'FIREBASE_SECRET', 'JIRA_HOST']),
   ],
 };
 

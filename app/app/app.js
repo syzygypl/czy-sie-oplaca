@@ -18,6 +18,8 @@ class App {
 
     this.data.$loaded().then(() => this.reloadTotalTimespent());
     this.settings.$watch(() => this.reloadTotalTimespent());
+
+    this.jiraHost = process.env.JIRA_HOST;
   }
 
   reloadTotalTimespent() {

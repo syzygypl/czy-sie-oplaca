@@ -27,7 +27,7 @@ div(layout="column" style="height: 100vh; overflow: auto")
                ng-repeat="version in $ctrl.data | filter: search.query | orderBy: $ctrl.orderBy"
                ng-class="{'archived' : version.archived }"
                ng-if="!($ctrl.settings.hideArchived && version.archived)")
-              td(md-cell) {{ version.projectKey }}
+              td(md-cell): a.md-button(href="//{{ $ctrl.jiraHost }}/browse/{{ version.projectKey }}" target="_blank") {{ version.projectKey }}
               td(md-cell)
                 | {{ version.name }}
                 md-icon(ng-show="version.archived") delete
