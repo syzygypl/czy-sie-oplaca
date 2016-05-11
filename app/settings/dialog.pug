@@ -1,0 +1,13 @@
+md-dialog
+  md-toolbar.md-whiteframe-1dp
+    .md-toolbar-tools
+      .md-title Settings
+  md-dialog-content(layout-padding)
+    md-subheader Active groups ({{ $ctrl.activeGroups }})
+    md-list
+      md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.groups")
+        md-checkbox(ng-model="$ctrl.groups[group]" aria-label="checkbox")
+        p {{ group }}
+  md-dialog-actions
+    md-button(ng-click="$ctrl.close()") Cancel
+    md-button.md-primary(ng-click="$ctrl.save()") Save

@@ -1,0 +1,7 @@
+{
+    "extends": "airbnb-base",
+    "rules": {
+      "no-debugger": 1,
+      "no-param-reassign": 0
+    }
+}
