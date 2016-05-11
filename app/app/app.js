@@ -23,7 +23,12 @@ class App {
   reloadTotalTimespent() {
     this.data.forEach(version => {
       version.totalTimespent =
-        this.groups.reduce((acc, group) => acc + version.timespent[group], 0);
+        this.groups.reduce((acc, group) => {
+          if (version.estimate && version.estimate[group]) {
+            acc = acc + version.timespent[group];
+          }
+          return acc;
+        }, 0);
     });
   }
 
@@ -57,6 +62,7 @@ class App {
         version.estimate[group] = Number(input.$modelValue) || 0;
 
         this.data.$save(version);
+        this.reloadTotalTimespent();
       },
       targetEvent: event,
       title: 'Add estimation',

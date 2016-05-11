@@ -19,11 +19,20 @@ div(layout="column" style="height: 100vh; overflow: auto")
             tr(md-row)
               th(md-column md-order-by="projectKey") Project Key
               th(md-column md-order-by="name") Name
+              th(md-column md-order-by="releaseDate") Deadline
               th(md-column md-numeric md-desc md-order-by="timespent['{{ group }}']" ng-repeat="group in $ctrl.groups") {{ group }}
               th(md-column md-numeric md-desc md-order-by="totalTimespent") Total
           tbody(md-body)
-            tr(md-row ng-disabled="version.archived" ng-repeat="version in $ctrl.data | filter: search.query | orderBy: $ctrl.orderBy")
+            tr(md-row
+               ng-repeat="version in $ctrl.data | filter: search.query | orderBy: $ctrl.orderBy"
+               ng-class="{'archived' : version.archived }"
+               ng-if="!($ctrl.settings.hideArchived && version.archived)")
               td(md-cell) {{ version.projectKey }}
-              td(md-cell) {{ version.name }}
-              td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)") {{ version.timespent[group] }} / {{ version.estimate[group] || 0 }}
+              td(md-cell)
+                | {{ version.name }}
+                md-icon(ng-show="version.archived") delete
+              td(md-cell) {{ version.releaseDate }}
+              td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
+                span(ng-show="version.estimate[group]") {{ version.timespent[group] }} / {{ version.estimate[group] }}
+                span.empty-estimate(ng-show="!version.estimate[group]") {{ version.timespent[group] }}
               td(md-cell) {{ version.totalTimespent }} / {{ $ctrl.totalEstimate(version) }}

@@ -21,6 +21,7 @@ class Settings {
 
         save() {
           settings.groups = this.groups;
+          settings.hideArchived = this.hideArchived;
           settings.$save();
           this.close();
         }
@@ -31,7 +32,7 @@ class Settings {
       },
       controllerAs: '$ctrl',
       bindToController: true,
-      locals: { groups: Object.assign({}, settings.groups) },
+      locals: { groups: Object.assign({}, settings.groups), hideArchived: settings.hideArchived },
     });
   }
 }

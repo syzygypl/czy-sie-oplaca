@@ -9,8 +9,14 @@
 }
 
 app {
-  tbody tr:hover {
-    background: #fafafa;
+  tbody {
+    tr:hover {
+      background: #fafafa;
+    }
+
+    tr.archived {
+      opacity: 0.5;
+    }
   }
 
   .search-input {
@@ -20,5 +26,9 @@ app {
     margin: 0;
     border: none;
     color: black;
+  }
+
+  .empty-estimate {
+    color: #aaa;
   }
 }

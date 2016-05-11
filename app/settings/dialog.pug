@@ -8,6 +8,9 @@ md-dialog
       md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.groups")
         md-checkbox(ng-model="$ctrl.groups[group]" aria-label="checkbox")
         p {{ group }}
+    md-subheader Other
+      p
+        md-checkbox(ng-model="$ctrl.hideArchived" aria-label="checkbox") hide archived versions
   md-dialog-actions
     md-button(ng-click="$ctrl.close()") Cancel
     md-button.md-primary(ng-click="$ctrl.save()") Save
