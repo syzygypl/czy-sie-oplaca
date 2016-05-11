@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require('dotenv').config();
+require('dotenv').config({ silent: true });
 
 const Firebase = require('firebase');
 const ref = new Firebase(process.env.FIREBASE_URL);

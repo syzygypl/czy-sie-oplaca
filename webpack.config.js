@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ silent: true });
 
 const webpack = require('webpack');
 
@@ -20,7 +20,7 @@ const configure = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ['babel-loader', 'eslint-loader'],
+        loaders: TARGET === 'develop' ? ['babel-loader', 'eslint-loader'] : ['babel-loader'],
         exclude: /node_modules/,
       },
       {
@@ -37,7 +37,7 @@ const configure = {
       },
     ],
   },
-  devtool: 'eval-source-map',
+  devtool: TARGET === 'develop' ? 'eval-source-map' : undefined,
   plugins: [
     new webpack.EnvironmentPlugin(['FIREBASE_URL', 'FIREBASE_SECRET']),
   ],

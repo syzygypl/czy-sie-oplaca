@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load local environment
+require('dotenv').config({ silent: true }); // Load local environment
 
 const express = require('express');
 const app = express();
