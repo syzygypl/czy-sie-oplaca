@@ -4,7 +4,7 @@
   "description": "Visialization JIRA worklogs",
   "main": "index.js",
   "scripts": {
-    "postinstall": "build",
+    "postinstall": "npm run build",
     "build": "webpack",
     "start": "node server.js",
     "develop": "webpack-dev-server",
