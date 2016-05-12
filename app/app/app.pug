@@ -39,6 +39,6 @@ div(layout="column" style="height: 100vh; overflow: auto")
               td(md-cell) {{ version.releaseDate | date }}
               td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
                 span(ng-show="version.estimate[group]") {{ version.timespent[group] }} / {{ version.estimate[group] }}
-                span(ng-show="!version.estimate[group]") {{ version.timespent[group] }}
+                span.no-estimate(ng-show="!version.estimate[group]") {{ version.timespent[group] }}
               td(md-cell) {{ version.totalTimespent }} / {{ version.totalEstimate }}
       md-table-pagination(md-limit-options="[15,25,50]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")

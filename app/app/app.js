@@ -46,7 +46,10 @@ class App {
 
       if (v.estimate) {
         this.groups.forEach(group => {
-          v.totalTimespent += v.timespent[group] || 0;
+          if (v.estimate[group]) {
+            v.totalTimespent += v.timespent[group] || 0;
+          }
+
           v.totalEstimate += v.estimate[group] || 0;
         });
 
