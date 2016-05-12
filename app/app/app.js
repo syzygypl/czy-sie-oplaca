@@ -68,7 +68,7 @@ class App {
     event.stopPropagation(); // in case autoselect is enabled
 
     this.$mdEditDialog.small({
-      modelValue: (version.estimate && version.estimate[group]) || 0,
+      modelValue: (version.estimate && version.estimate[group]) || '',
       placeholder: 'Add estimation',
       save: (input) => {
         version.estimate = version.estimate || {};
