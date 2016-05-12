@@ -7,7 +7,7 @@ div(layout="column" style="height: 100vh; overflow: auto")
       md-button.md-icon-button(ng-click="search.toggle = true")
         md-icon search
       div(ng-if="search.toggle" layout="row" flex)
-        input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.page = 1" placeholder="search")
+        input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.resetPagination()" placeholder="search")
         md-button.md-icon-button(ng-click="search.toggle = false; search.query = ''")
           md-icon close
       settings(settings="$ctrl.settings")
