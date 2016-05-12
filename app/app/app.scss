@@ -14,8 +14,28 @@ app {
       background: #fafafa;
     }
 
-    tr.archived {
-      opacity: 0.5;
+    tr {
+      &.medium {
+        background: #FFECB3;
+        &:hover {
+          background: darken(#FFECB3, 3);
+        }
+      }
+      &.high {
+        background: #FFCDD2;
+        &:hover {
+          background: darken(#FFCDD2, 3);
+        }
+      }
+      &.over {
+        background: #EF9A9A;
+        &:hover {
+          background: darken(#EF9A9A, 3);
+        }
+      }
+      &.empty-estimate td.md-cell {
+        color: #AAA;
+      }
     }
   }
 

@@ -11,36 +11,21 @@ class App {
     this.$mdEditDialog = $mdEditDialog;
 
     this.settings = $firebaseObject(firebase.child('settings'));
-    this.orderBy = 'projectKey';
+    this.orderBy = '-budget';
+    this.jiraHost = process.env.JIRA_HOST;
+    this.limit = 15;
+    this.page = 1;
 
     this.data = $firebaseArray(firebase.child('versions'));
     this.promise = this.data.$loaded();
 
-    this.data.$loaded().then(() => this.reloadTotalTimespent());
-    this.settings.$watch(() => this.reloadTotalTimespent());
-
-    this.jiraHost = process.env.JIRA_HOST;
+    this.data.$loaded().then(() => this.reload());
+    this.resetPagination = this.resetPagination.bind(this);
   }
 
-  reloadTotalTimespent() {
-    this.data.forEach(version => {
-      version.totalTimespent =
-        this.groups.reduce((acc, group) => {
-          if (version.estimate && version.estimate[group]) {
-            acc = acc + version.timespent[group];
-          }
-          return acc;
-        }, 0);
-    });
-  }
-
-  totalEstimate(version) {
-    return this.groups.reduce((acc, group) => {
-      if (!version.estimate) {
-        return acc;
-      }
-      return acc + (version.estimate[group] || 0);
-    }, 0);
+  get versions() {
+    return this.data.filter(v => !(this.settings.hideArchived && v.archived
+      || this.settings.hideReleased && v.released));
   }
 
   get groups() {
@@ -53,6 +38,29 @@ class App {
     return [];
   }
 
+  reload(version) {
+    const data = version ? [version] : this.data;
+
+    data.forEach(v => {
+      v.totalTimespent = v.totalEstimate = v.budget = 0;
+
+      if (v.estimate) {
+        this.groups.forEach(group => {
+          v.totalTimespent += v.timespent[group] || 0;
+          v.totalEstimate += v.estimate[group] || 0;
+        });
+
+        if (v.totalEstimate) {
+          v.budget = Math.round((v.totalTimespent / v.totalEstimate) * 100);
+        }
+      }
+    });
+  }
+
+  resetPagination() {
+    this.page = 1;
+  }
+
   editEstimate($event, version, group) {
     event.stopPropagation(); // in case autoselect is enabled
 
@@ -63,8 +71,8 @@ class App {
         version.estimate = version.estimate || {};
         version.estimate[group] = Number(input.$modelValue) || 0;
 
+        this.reload(version);
         this.data.$save(version);
-        this.reloadTotalTimespent();
       },
       targetEvent: event,
       title: 'Add estimation',

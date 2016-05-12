@@ -10,18 +10,19 @@ class Settings {
   open($event) {
     const $mdDialog = this.$mdDialog;
     const settings = this.settings;
+    const cloneSettings = Object.assign({}, this.settings);
+    cloneSettings.groups = Object.assign({}, this.settings.groups);
 
     $mdDialog.show({
       targetEvent: $event,
       template: dialogTemplate,
       controller: class Dialog {
         get activeGroups() {
-          return Object.keys(this.groups).filter(key => this.groups[key]).length;
+          return Object.keys(this.settings.groups).filter(key => this.settings.groups[key]).length;
         }
 
         save() {
-          settings.groups = this.groups;
-          settings.hideArchived = this.hideArchived;
+          Object.assign(settings, this.settings);
           settings.$save();
           this.close();
         }
@@ -32,7 +33,7 @@ class Settings {
       },
       controllerAs: '$ctrl',
       bindToController: true,
-      locals: { groups: Object.assign({}, settings.groups), hideArchived: settings.hideArchived },
+      locals: { settings: cloneSettings },
     });
   }
 }

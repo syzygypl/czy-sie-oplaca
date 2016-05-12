@@ -7,7 +7,7 @@ div(layout="column" style="height: 100vh; overflow: auto")
       md-button.md-icon-button(ng-click="search.toggle = true")
         md-icon search
       div(ng-if="search.toggle" layout="row" flex)
-        input.search-input(type="text" autofocus flex="1" ng-model="search.query" placeholder="search")
+        input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.page = 1" placeholder="search")
         md-button.md-icon-button(ng-click="search.toggle = false; search.query = ''")
           md-icon close
       settings(settings="$ctrl.settings")
@@ -15,24 +15,30 @@ div(layout="column" style="height: 100vh; overflow: auto")
     md-card
       md-table-container
         table(md-table md-progress="$ctrl.promise")
-          thead(md-head md-order="$ctrl.orderBy")
+          thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
             tr(md-row)
               th(md-column md-order-by="projectKey") Project Key
               th(md-column md-order-by="name") Name
+              th(md-column md-numeric md-desc md-order-by="budget") Budget
               th(md-column md-order-by="releaseDate") Deadline
-              th(md-column md-numeric md-desc md-order-by="timespent['{{ group }}']" ng-repeat="group in $ctrl.groups") {{ group }}
+              th(md-column md-numeric md-desc md-order-by="timespent['{{ group }}']" ng-repeat="group in $ctrl.groups")
+                md-tooltip {{ group }}
+                | {{ group | limitTo: 8 }}
+                span(ng-show="group.length > 8") ...
               th(md-column md-numeric md-desc md-order-by="totalTimespent") Total
           tbody(md-body)
             tr(md-row
-               ng-repeat="version in $ctrl.data | filter: search.query | orderBy: $ctrl.orderBy"
-               ng-class="{'archived' : version.archived }"
-               ng-if="!($ctrl.settings.hideArchived && version.archived)")
+               ng-repeat="version in $ctrl.versions | filter: search.query | orderBy: $ctrl.orderBy | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit"
+               ng-class="{ 'medium': version.budget > 50, 'high': version.budget > 80, 'over': version.budget > 100, 'empty-estimate' : !version.totalEstimate}")
               td(md-cell): a.md-button(href="//{{ $ctrl.jiraHost }}/browse/{{ version.projectKey }}" target="_blank") {{ version.projectKey }}
               td(md-cell)
-                | {{ version.name }}
+                md-icon(ng-show="version.released") done
                 md-icon(ng-show="version.archived") delete
-              td(md-cell) {{ version.releaseDate }}
+                | {{ version.name }}
+              td(md-cell) {{ version.budget }}%
+              td(md-cell) {{ version.releaseDate | date }}
               td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
                 span(ng-show="version.estimate[group]") {{ version.timespent[group] }} / {{ version.estimate[group] }}
-                span.empty-estimate(ng-show="!version.estimate[group]") {{ version.timespent[group] }}
-              td(md-cell) {{ version.totalTimespent }} / {{ $ctrl.totalEstimate(version) }}
+                span(ng-show="!version.estimate[group]") {{ version.timespent[group] }}
+              td(md-cell) {{ version.totalTimespent }} / {{ version.totalEstimate }}
+      md-table-pagination(md-limit-options="[15,25,50]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")
