@@ -3,6 +3,7 @@ require('dotenv').config({ silent: true });
 
 const Firebase = require('firebase');
 const ref = new Firebase(process.env.FIREBASE_URL);
+ref.authWithCustomToken(process.env.FIREBASE_SECRET);
 
 const versionsRef = ref.child('versions');
 const settingsRef = ref.child('settings');
