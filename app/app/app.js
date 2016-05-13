@@ -11,7 +11,7 @@ class App {
     this.$mdEditDialog = $mdEditDialog;
 
     this.settings = $firebaseObject(firebase.child('settings'));
-    this.orderBy = '-budget';
+    this.orderBy = 'releaseDate';
     this.jiraHost = process.env.JIRA_HOST;
     this.limit = 15;
     this.page = 1;
