@@ -37,6 +37,7 @@
     "pug-html-loader": "^1.0.5",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
+    "sync-exec": "^0.6.2",
     "webpack": "^1.13.0"
   },
   "devDependencies": {
