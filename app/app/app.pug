@@ -36,7 +36,7 @@ div(layout="column" style="height: 100vh; overflow: auto")
                 md-icon(ng-show="version.archived") delete
                 | {{ version.name }}
               td(md-cell) {{ version.budget }}%
-              td(md-cell) {{ version.releaseDate | date }}
+              td(md-cell ng-class="{ 'overDeadline': version.isOverDeadline }") {{ version.releaseDate }}
               td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
                 span() {{ version.timespent[group] }} / {{ version.estimate[group] > 0  ? version.totalEstimate : '-' }}
               td(md-cell) {{ version.totalTimespent }} / {{ version.totalEstimate > 0 ? version.totalEstimate : '-' }}

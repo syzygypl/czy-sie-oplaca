@@ -13,7 +13,7 @@ class App {
     this.settings = $firebaseObject(firebase.child('settings'));
     this.orderBy = 'releaseDate';
     this.jiraHost = process.env.JIRA_HOST;
-    this.limit = 15;
+    this.limit = 50;
     this.page = 1;
 
     this.data = $firebaseArray(firebase.child('versions'));
@@ -42,6 +42,8 @@ class App {
     const data = version ? [version] : this.data;
 
     data.forEach(v => {
+      v.isOverDeadline = v.releaseDate ? new Date(v.releaseDate).getTime() < Date.now() : false;
+
       v.totalTimespent = v.totalEstimate = v.budget = 0;
 
       this.groups.forEach(group => {

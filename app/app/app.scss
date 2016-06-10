@@ -30,6 +30,12 @@ app {
       &.empty-estimate td.md-cell {
         color: #AAA;
       }
+
+      td.md-cell {
+        &.overDeadline {
+          color: #742a2a;
+        }
+      }
     }
   }
 
