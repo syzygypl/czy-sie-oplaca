@@ -15,14 +15,8 @@ app {
     }
 
     tr {
-      &.medium {
-        background: #FFECB3;
-        &:hover {
-          background: darken(#FFECB3, 3);
-        }
-      }
       &.high {
-        background: #FFCDD2;
+        background: #FFECB3;
         &:hover {
           background: darken(#FFCDD2, 3);
         }
