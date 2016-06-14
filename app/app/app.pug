@@ -38,6 +38,6 @@ div(layout="column" style="height: 100vh; overflow: auto")
               td(md-cell) {{ version.budget }}%
               td(md-cell ng-class="{ 'overDeadline': version.isOverDeadline }") {{ version.releaseDate }}
               td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
-                span() {{ version.timespent[group] }} / {{ version.estimate[group] > 0  ? version.totalEstimate : '-' }}
+                span() {{ version.timespent[group] }} / {{ version.estimate[group] > 0  ? version.estimate[group] : '-' }}
               td(md-cell) {{ version.totalTimespent }} / {{ version.totalEstimate > 0 ? version.totalEstimate : '-' }}
       md-table-pagination(md-limit-options="[15,25,50,100]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")
