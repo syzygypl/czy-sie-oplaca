@@ -44,12 +44,16 @@ class App {
     data.forEach(v => {
       v.isOverDeadline = v.releaseDate ? new Date(v.releaseDate).getTime() < Date.now() : false;
 
-      v.totalTimespent = v.totalEstimate = v.budget = 0;
+      v.totalTimespent = v.budget = 0;
+      v.totalEstimate = undefined;
 
       if (v.estimate) {
         this.groups.forEach(group => {
-          if (v.estimate[group]) {
+          if (this.isValidNumber(v.estimate[group])) {
             v.totalTimespent += v.timespent[group] || 0;
+            if (v.totalEstimate === undefined) {
+              v.totalEstimate = 0;
+            }
             v.totalEstimate += v.estimate[group] || 0;
           }
         });
@@ -69,11 +73,12 @@ class App {
     event.stopPropagation(); // in case autoselect is enabled
 
     this.$mdEditDialog.small({
-      modelValue: (version.estimate && version.estimate[group]) || '',
+      modelValue: version.estimate && version.estimate[group],
       placeholder: 'Add estimation',
       save: (input) => {
         version.estimate = version.estimate || {};
-        version.estimate[group] = Number(input.$modelValue) || 0;
+        version.estimate[group] =
+            this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : '';
 
         this.reload(version);
         this.data.$save(version);
@@ -84,6 +89,10 @@ class App {
         'md-maxlength': 30,
       },
     });
+  }
+
+  isValidNumber(value) {
+    return !isNaN(parseFloat(value)) && Number(value) >= 0;
   }
 }
 App.$inject = ['$http', '$firebaseArray', '$firebaseObject', '$mdEditDialog'];
