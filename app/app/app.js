@@ -13,7 +13,7 @@ class App {
     this.settings = $firebaseObject(firebase.child('settings'));
     this.orderBy = 'releaseDate';
     this.jiraHost = process.env.JIRA_HOST;
-    this.limit = 50;
+    this.limit = 100;
     this.page = 1;
 
     this.data = $firebaseArray(firebase.child('versions'));
