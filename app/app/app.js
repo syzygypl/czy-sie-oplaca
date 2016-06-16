@@ -46,15 +46,14 @@ class App {
 
       v.totalTimespent = v.totalEstimate = v.budget = 0;
 
-      this.groups.forEach(group => {
-        if (v.timespent && v.timespent[group]) {
-          v.totalTimespent += v.timespent[group] || 0;
-        }
-
-        if (v.estimate && v.estimate[group]) {
-          v.totalEstimate += v.estimate[group] || 0;
-        }
-      });
+      if (v.estimate) {
+        this.groups.forEach(group => {
+          if (v.estimate[group]) {
+            v.totalTimespent += v.timespent[group] || 0;
+            v.totalEstimate += v.estimate[group] || 0;
+          }
+        });
+      }
 
       if (v.totalEstimate) {
         v.budget = Math.round((v.totalTimespent / v.totalEstimate) * 100);
