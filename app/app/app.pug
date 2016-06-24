@@ -10,6 +10,8 @@ div(layout="column" style="height: 100vh; overflow: auto")
         input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.resetPagination()" placeholder="search")
         md-button.md-icon-button(ng-click="search.toggle = false; search.query = ''")
           md-icon close
+      div
+        md-checkbox.show-not-estimated(ng-model="showNotEstimated" aria-label="checkbox") Show not estimated
       settings(settings="$ctrl.settings")
   md-content(flex layout-padding)
     md-card
@@ -29,7 +31,8 @@ div(layout="column" style="height: 100vh; overflow: auto")
           tbody(md-body)
             tr(md-row
                ng-repeat="version in $ctrl.versions | filter: search.query | orderBy: $ctrl.orderBy | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit"
-               ng-class="{ 'high': version.budget > 80, 'over': version.budget > 100, 'empty-estimate' : !version.totalEstimate}")
+               ng-if="version.isEstimated || showNotEstimated"
+               ng-class="{ 'high': version.budget > 80, 'over': version.budget > 100, 'empty-estimate' : !version.isEstimated}")
               td(md-cell): a.md-button(href="//{{ $ctrl.jiraHost }}/browse/{{ version.projectKey }}" target="_blank") {{ version.projectKey }}
               td(md-cell)
                 md-icon(ng-show="version.released") done

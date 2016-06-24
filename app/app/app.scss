@@ -9,6 +9,10 @@
 }
 
 app {
+  .show-not-estimated {
+    margin-bottom: 0;
+  }
+
   tbody {
     tr:hover {
       background: #fafafa;

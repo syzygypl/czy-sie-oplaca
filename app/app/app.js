@@ -45,14 +45,16 @@ class App {
       v.isOverDeadline = v.releaseDate ? new Date(v.releaseDate).getTime() < Date.now() : false;
 
       v.totalTimespent = v.budget = 0;
-      v.totalEstimate = undefined;
+      v.totalEstimate = null;
+      v.isEstimated = false;
 
       if (v.estimate) {
         this.groups.forEach(group => {
           if (this.isValidNumber(v.estimate[group])) {
             v.totalTimespent += v.timespent[group] || 0;
-            if (v.totalEstimate === undefined) {
+            if (v.totalEstimate === null) {
               v.totalEstimate = 0;
+              v.isEstimated = true;
             }
             v.totalEstimate += v.estimate[group] || 0;
           }
