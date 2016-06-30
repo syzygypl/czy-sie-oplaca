@@ -3,6 +3,10 @@ md-dialog
     .md-toolbar-tools
       .md-title Settings
   md-dialog-content(layout-padding)
+    md-divider Local settings (affect current session)
+      p: md-checkbox(ng-model="$ctrl.localSettings.showNotEstimated" aria-label="checkbox") Show not estimated
+      p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") Enable estimate changes
+    md-divider Global settings (affect all users, change with care)
     md-subheader Active groups ({{ $ctrl.activeGroups }})
     md-list
       md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.settings.groups")

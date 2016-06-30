@@ -33,7 +33,10 @@ class Settings {
       },
       controllerAs: '$ctrl',
       bindToController: true,
-      locals: { settings: cloneSettings },
+      locals: {
+        settings: cloneSettings,
+        localSettings: this.localSettings,
+      },
     });
   }
 }
@@ -44,5 +47,6 @@ module.component('settings', {
   controller: Settings,
   bindings: {
     settings: '<',
+    localSettings: '<',
   },
 });

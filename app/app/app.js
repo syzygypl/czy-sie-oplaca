@@ -7,10 +7,12 @@ import template from './app.pug';
 import './app.scss';
 
 class App {
-  constructor($http, $firebaseArray, $firebaseObject, $mdEditDialog) {
+  constructor($http, $firebaseArray, $firebaseObject, $mdEditDialog, $mdToast) {
     this.$mdEditDialog = $mdEditDialog;
+    this.$mdToast = $mdToast;
 
     this.settings = $firebaseObject(firebase.child('settings'));
+    this.localSettings = {};
     this.orderBy = 'releaseDate';
     this.jiraHost = process.env.JIRA_HOST;
     this.limit = 100;
@@ -72,6 +74,11 @@ class App {
   }
 
   editEstimate($event, version, group) {
+    if (!this.localSettings.isEditEnabled) {
+      this.$mdToast.showSimple('Changes disabled (can be enabled in settings).');
+      return;
+    }
+
     event.stopPropagation(); // in case autoselect is enabled
 
     this.$mdEditDialog.small({
@@ -97,7 +104,7 @@ class App {
     return !isNaN(parseFloat(value)) && Number(value) >= 0;
   }
 }
-App.$inject = ['$http', '$firebaseArray', '$firebaseObject', '$mdEditDialog'];
+App.$inject = ['$http', '$firebaseArray', '$firebaseObject', '$mdEditDialog', '$mdToast'];
 
 module.component('app', {
   template,
