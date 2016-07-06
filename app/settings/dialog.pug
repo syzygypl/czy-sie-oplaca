@@ -4,17 +4,18 @@ md-dialog
       .md-title Settings
   md-dialog-content(layout-padding)
     md-divider Local settings (affect current session)
-      p: md-checkbox(ng-model="$ctrl.localSettings.showNotEstimated" aria-label="checkbox") Show not estimated
-      p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") Enable estimate changes
+      md-subheader Estimates
+        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") enable estimate changes
+      md-subheader Versions
+        p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") hide not estimated
+        p: md-checkbox(ng-model="$ctrl.localSettings.hideArchived" aria-label="checkbox") hide archived versions
+        p: md-checkbox(ng-model="$ctrl.localSettings.hideReleased" aria-label="checkbox") hide released versions
     md-divider Global settings (affect all users, change with care)
     md-subheader Active groups ({{ $ctrl.activeGroups }})
     md-list
       md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.settings.groups")
         md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
         p {{ group }}
-    md-subheader Other
-      p: md-checkbox(ng-model="$ctrl.settings.hideArchived" aria-label="checkbox") hide archived versions
-      p: md-checkbox(ng-model="$ctrl.settings.hideReleased" aria-label="checkbox") hide released versions
   md-dialog-actions
     md-button(ng-click="$ctrl.close()") Cancel
     md-button.md-primary(ng-click="$ctrl.save()") Save

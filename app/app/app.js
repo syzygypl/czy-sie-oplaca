@@ -12,7 +12,12 @@ class App {
     this.$mdToast = $mdToast;
 
     this.settings = $firebaseObject(firebase.child('settings'));
-    this.localSettings = {};
+    this.localSettings = {
+      hideReleased: true,
+      hideArchived: true,
+      hideNotEstimated: true,
+      isEditEnabled: false,
+    };
     this.orderBy = 'releaseDate';
     this.jiraHost = process.env.JIRA_HOST;
     this.limit = 100;
@@ -26,8 +31,10 @@ class App {
   }
 
   get versions() {
-    return this.data.filter(v => !(this.settings.hideArchived && v.archived
-      || this.settings.hideReleased && v.released));
+    // return this.data;
+    return this.data.filter(v => !(this.localSettings.hideArchived && v.archived
+      || this.localSettings.hideReleased && v.released)
+      && (!this.localSettings.hideNotEstimated || v.isEstimated));
   }
 
   get groups() {
