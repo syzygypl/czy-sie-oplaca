@@ -11,11 +11,27 @@ md-dialog
         p: md-checkbox(ng-model="$ctrl.localSettings.hideArchived" aria-label="checkbox") hide archived versions
         p: md-checkbox(ng-model="$ctrl.localSettings.hideReleased" aria-label="checkbox") hide released versions
     md-divider Global settings (affect all users, change with care)
-    md-subheader Active groups ({{ $ctrl.activeGroups }})
-    md-list
-      md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.settings.groups")
-        md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
-        p {{ group }}
+    md-subheader Active groups ({{ $ctrl.activeGroups }}) and wages
+    md-table-container
+      table(md-table)
+        thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
+          tr(md-row)
+            th(md-column)
+            th(md-column)
+            th(md-column) Wage
+        tbody(md-body)
+          tr(md-row
+          ng-repeat="(group, value) in $ctrl.settings.groups")
+            td(md-cell)
+              md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
+            td(md-cell ng-click="$ctrl.settings.groups[group] = !$ctrl.settings.groups[group]")
+              span() {{ group }}
+            td(md-cell ng-click="$ctrl.editWage($event, group)")
+              span() {{ $ctrl.getCurrentWage(group) || '-' }}
+    //md-list
+    //  md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.settings.groups")
+    //    md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
+    //    p {{ group }}
   md-dialog-actions
     md-button(ng-click="$ctrl.close()") Cancel
     md-button.md-primary(ng-click="$ctrl.save()") Save

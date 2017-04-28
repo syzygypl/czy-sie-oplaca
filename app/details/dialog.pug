@@ -1,0 +1,31 @@
+md-dialog
+    md-toolbar.md-whiteframe-1dp
+        .md-toolbar-tools
+            .md-title {{ $ctrl.version.name }} {{ $ctrl.version.id }}
+    md-dialog-content(layout-padding)
+        md-table-container
+            table(md-table)
+                thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
+                    tr(md-row)
+                        th(md-column md-order-by="group")
+                        th(md-column md-numeric md-desc  md-order-by="budget") Budżet (zł)
+                        th(md-column md-numeric md-desc md-order-by="timespent") Godziny (zrealizowane/szacowane)
+                        th(md-column md-numeric md-desc  md-order-by="costsINT") Koszty wewnętrzne (zł)
+                        th(md-column md-numeric md-desc  md-order-by="costsEXT") Koszty zewnętrzne (zł)
+                        th(md-column md-numeric md-desc  md-order-by="costsDelta") &Delta; (zł)
+                tbody(md-body)
+                    tr(md-row
+                    ng-repeat="group in $ctrl.activeGroups")
+                        td(md-cell) {{ group }}
+                        td(md-cell ng-click="$ctrl.editGroupData($event, group, 'budget')")
+                            span() {{ $ctrl.version.groupsData['budget'][group] !== undefined ? $ctrl.version.groupsData['budget'][group] : '-' }}
+                        td(md-cell ng-click="$ctrl.editGroupData($event, group, 'hours')")
+                            span() {{ $ctrl.version.timespent[group] }}&nbsp;/&nbsp;{{ $ctrl.version.groupsData['hours'][group] > 0 ? $ctrl.version.groupsData['hours'][group] : '-' }}
+                        td(md-cell)
+                            span() {{ $ctrl.version.groupsData['timespentCosts'][group] > 0 ? $ctrl.version.groupsData['timespentCosts'][group] : '-' }}
+                        td(md-cell ng-click="$ctrl.editGroupData($event, group, 'costsEXT')")
+                            span() {{ $ctrl.version.groupsData['costsEXT'][group] > 0 ? $ctrl.version.groupsData['costsEXT'][group] : '-' }}
+                        td(md-cell) {{ $ctrl.version.groupsData['budgetLeft'][group] !== undefined ? $ctrl.version.groupsData['budgetLeft'][group] : '-' }}
+    md-dialog-actions
+        md-button(ng-click="$ctrl.close()") Cancel
+        md-button.md-primary(ng-click="$ctrl.save()") Save

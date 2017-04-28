@@ -7,36 +7,102 @@ ref.authWithCustomToken(process.env.FIREBASE_SECRET);
 
 const versionsRef = ref.child('versions');
 const settingsRef = ref.child('settings');
+const worklogsRef = ref.child('worklogs');
+const timestamp = new Date().getTime();
+// const exec = require('sync-exec');
+// const cmd = './node_modules/.bin/jira-worklog'
+//   + ` -H ${process.env.JIRA_HOST}`
+//   + ` -u ${process.env.JIRA_USERNAME}`
+//   + ` -p ${process.env.JIRA_PASSWORD}`;
+//
+// console.log('Loading data from jira-worklog...');
+//
+// const result = exec(cmd);
+// const data = JSON.parse(result.stdout);
+//
+// console.log('Processing firebase...');
 
-const exec = require('sync-exec');
-const cmd = './node_modules/.bin/jira-worklog'
-  + ` -H ${process.env.JIRA_HOST}`
-  + ` -u ${process.env.JIRA_USERNAME}`
-  + ` -p ${process.env.JIRA_PASSWORD}`;
+let logged = false;
 
-console.log('Loading data from jira-worklog...');
+function didWorklogChange(worklog1, worklog2) {
+  for (let key of Object.keys(worklog1)) {
+    if (worklog1[key] !== worklog2[key]) return true;
+  }
 
-const result = exec(cmd);
-const data = JSON.parse(result.stdout);
+  return Object.keys(worklog1).length !== Object.keys(worklog2).length;
+}
 
-console.log('Processing firebase...');
+function updateWorklog(worklogRef, timespent) {
+  return worklogRef.limitToLast(1).once('value')
+    .then((snapshot) => {
+      const worklogsArray = snapshot.val();
+      const lastWorklog = worklogsArray && worklogsArray[Object.keys(worklogsArray).sort((a, b) => a - b).pop()];
 
-// Update
-settingsRef.once('value', (snapshot) => {
-  const settings = snapshot.val() || {};
-  settings.groups = settings.groups || {};
-  const groups = {};
+      if (!worklogsArray || didWorklogChange(lastWorklog, timespent)) {
+        return worklogRef.child(timestamp).set(timespent);
+      } else {
+        return Promise.resolve();
+      }
+    });
+}
 
-  Object.keys(data[0].timespent).forEach(key => {
-    groups[key] = settings.groups[key] || false;
-  });
+function updateSettings(settingsRef, refGroups) {
+  return settingsRef.once('value')
+    .then((snapshot) => {
+      const settings = snapshot.val() || {};
+      settings.groups = settings.groups || {};
+      const groups = {};
+      refGroups.forEach(key => {
+        groups[key] = settings.groups[key] || false;
+      });
 
-  settings.groups = groups;
-  settingsRef.update(settings);
-});
+      settings.groups = groups;
+      return settingsRef.update(settings);
+    });
+}
 
-Promise.all(data.map(v => versionsRef.child(v.id).update(v)))
-  .then(() => {
+function updateVersions(worklogsRef, versionsRef, data) {
+  return Promise.all(data.map(v => {
+    const timespent = v.timespent;
+    const versionWorklogsRef = worklogsRef.child(v.id);
+    delete v.timespent; // do not pollute version data
+
+    return Promise.all([
+      versionsRef.child(v.id).update(v),
+      updateWorklog(versionWorklogsRef, timespent)
+    ])
+  }));
+}
+
+function performUpdate(data, settingsRef, worklogsRef, versionsRef) {
+  const groups = Object.keys(data[0].timespent);
+  return Promise.all([
+    updateSettings(settingsRef, groups),
+    updateVersions(worklogsRef, versionsRef, data)
+  ]);
+}
+
+// updateSettings()
+//   .then(updateVersions)
+//   .then(() => {
+//     console.log('Firebase updated.');
+//     process.exit(0);
+//   });
+
+var fs = require('fs');
+fs.readFile("./jira-worklog.json", 'utf8', function(err, _data) {
+  if(err) {
+    return console.log(err);
+  }
+  const data = JSON.parse(_data);
+
+  performUpdate(
+    data,
+    settingsRef,
+    worklogsRef,
+    versionsRef
+  ).then(() => {
     console.log('Firebase updated.');
     process.exit(0);
   });
+});
