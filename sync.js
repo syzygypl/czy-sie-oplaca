@@ -9,18 +9,18 @@ const versionsRef = ref.child('versions');
 const settingsRef = ref.child('settings');
 const worklogsRef = ref.child('worklogs');
 const timestamp = new Date().getTime();
-// const exec = require('sync-exec');
-// const cmd = './node_modules/.bin/jira-worklog'
-//   + ` -H ${process.env.JIRA_HOST}`
-//   + ` -u ${process.env.JIRA_USERNAME}`
-//   + ` -p ${process.env.JIRA_PASSWORD}`;
-//
-// console.log('Loading data from jira-worklog...');
-//
-// const result = exec(cmd);
-// const data = JSON.parse(result.stdout);
-//
-// console.log('Processing firebase...');
+const exec = require('sync-exec');
+const cmd = './node_modules/.bin/jira-worklog'
+  + ` -H ${process.env.JIRA_HOST}`
+  + ` -u ${process.env.JIRA_USERNAME}`
+  + ` -p ${process.env.JIRA_PASSWORD}`;
+
+console.log('Loading data from jira-worklog...');
+
+const result = exec(cmd);
+const data = JSON.parse(result.stdout);
+
+console.log('Processing firebase...');
 
 let logged = false;
 
@@ -82,19 +82,12 @@ function performUpdate(data, settingsRef, worklogsRef, versionsRef) {
   ]);
 }
 
-// updateSettings()
-//   .then(updateVersions)
-//   .then(() => {
-//     console.log('Firebase updated.');
-//     process.exit(0);
-//   });
-
-var fs = require('fs');
-fs.readFile("./jira-worklog.json", 'utf8', function(err, _data) {
-  if(err) {
-    return console.log(err);
-  }
-  const data = JSON.parse(_data);
+// var fs = require('fs');
+// fs.readFile("./jira-worklog.json", 'utf8', function(err, _data) {
+//   if(err) {
+//     return console.log(err);
+//   }
+//   const data = JSON.parse(_data);
 
   performUpdate(
     data,
@@ -105,4 +98,4 @@ fs.readFile("./jira-worklog.json", 'utf8', function(err, _data) {
     console.log('Firebase updated.');
     process.exit(0);
   });
-});
+// });
