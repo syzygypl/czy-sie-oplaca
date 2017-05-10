@@ -11,7 +11,6 @@ export default class CostsCalc {
   findProperWage(group, timestamp) {
     const wages = this.settings.wages && this.settings.wages[group];
     if (!wages) {
-      // console.warn("wage not set for", group);
       return false;
     }
 

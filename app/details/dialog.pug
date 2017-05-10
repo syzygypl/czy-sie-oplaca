@@ -1,7 +1,10 @@
 md-dialog
     md-toolbar.md-whiteframe-1dp
         .md-toolbar-tools
-            .md-title {{ $ctrl.version.name }} {{ $ctrl.version.id }}
+            div(flex)
+                .md-title {{ $ctrl.version.name }} {{ $ctrl.version.id }}
+            md-button.md-icon-button(ng-click="$ctrl.close()")
+                md-icon close
     md-dialog-content(layout-padding)
         md-table-container
             table(md-table)
@@ -14,6 +17,16 @@ md-dialog
                         th(md-column md-numeric md-desc  md-order-by="costsEXT") Koszty zewnętrzne (zł)
                         th(md-column md-numeric md-desc  md-order-by="costsDelta") &Delta; (zł)
                 tbody(md-body)
+                    tr.total-row(md-row)
+                        td(md-cell) <b>Total</b>
+                        td(md-cell) {{ $ctrl.version.total_budget >= 0 ? $ctrl.version.total_budget : '-' }}
+                        td(md-cell) {{ $ctrl.version.total_timespent }}&nbsp;/&nbsp;{{ $ctrl.version.total_hours >= 0 ? $ctrl.version.total_hours : '-' }}
+                        td(md-cell) {{ $ctrl.version.total_timespentCosts >= 0 ? $ctrl.version.total_timespentCosts : '-' }}
+                        td(md-cell) {{ $ctrl.version.total_costsEXT >= 0 ? $ctrl.version.total_costsEXT : '-' }}
+                        td.budget-icon(md-cell)
+                            md-icon(ng-show="$ctrl.version.total_budgetLeft > 0" style="color: green") monetization_on
+                            md-icon(ng-show="$ctrl.version.total_budgetLeft <= 0" style="color: red") money_off
+                            | {{ $ctrl.version.total_budgetLeft !== undefined ? $ctrl.version.total_budgetLeft : '-' }}
                     tr(md-row
                     ng-repeat="group in $ctrl.activeGroups")
                         td(md-cell) {{ group }}
@@ -25,7 +38,7 @@ md-dialog
                             span() {{ $ctrl.version.groupsData['timespentCosts'][group] > 0 ? $ctrl.version.groupsData['timespentCosts'][group] : '-' }}
                         td(md-cell ng-click="$ctrl.editGroupData($event, group, 'costsEXT')")
                             span() {{ $ctrl.version.groupsData['costsEXT'][group] > 0 ? $ctrl.version.groupsData['costsEXT'][group] : '-' }}
-                        td(md-cell) {{ $ctrl.version.groupsData['budgetLeft'][group] !== undefined ? $ctrl.version.groupsData['budgetLeft'][group] : '-' }}
-    md-dialog-actions
-        md-button(ng-click="$ctrl.close()") Cancel
-        md-button.md-primary(ng-click="$ctrl.save()") Save
+                        td.budget-icon(md-cell)
+                            md-icon(ng-show="$ctrl.version.groupsData['budgetLeft'][group] > 0" style="color: green") monetization_on
+                            md-icon(ng-show="$ctrl.version.groupsData['budgetLeft'][group] <= 0" style="color: red") money_off
+                            | {{ $ctrl.version.groupsData['budgetLeft'][group] !== undefined ? $ctrl.version.groupsData['budgetLeft'][group] : '-' }}

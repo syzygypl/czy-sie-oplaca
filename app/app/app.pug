@@ -17,15 +17,6 @@ div(layout="column" style="height: 100vh; overflow: auto")
         table(md-table md-progress="$ctrl.promise")
           thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
             tr(md-row)
-              //th(md-column md-order-by="projectKey") Project Key
-              //th(md-column md-order-by="name") Name
-              //th(md-column md-numeric md-desc md-order-by="budget") Progress
-              //th(md-column md-order-by="releaseDate") Deadline
-              //th(md-column md-numeric md-desc md-order-by="timespent['{{ group }}']" ng-repeat="group in $ctrl.groups")
-              //  md-tooltip {{ group }}
-              //  | {{ group | limitTo: 8 }}
-              //  span(ng-show="group.length > 8") ...
-              //th(md-column md-numeric md-desc md-order-by="totalTimespent") Total
               th(md-column md-order-by="group") Nazwa projektu (wersja projektu w JiRA)
               th(md-column md-numeric md-desc  md-order-by="budget") Budżet (zł)
               th(md-column md-numeric md-desc md-order-by="timespent") Godziny (zrealizowane/szacowane)
@@ -40,11 +31,8 @@ div(layout="column" style="height: 100vh; overflow: auto")
               td(md-cell) {{ version.total_timespent }}&nbsp;/&nbsp;{{ version.total_hours >= 0 ? version.total_hours : '-' }}
               td(md-cell) {{ version.total_timespentCosts >= 0 ? version.total_timespentCosts : '-' }}
               td(md-cell) {{ version.total_costsEXT >= 0 ? version.total_costsEXT : '-' }}
-              td(md-cell)
+              td.budget-icon(md-cell)
                 md-icon(ng-show="version.total_budgetLeft > 0" style="color: green") monetization_on
                 md-icon(ng-show="version.total_budgetLeft <= 0" style="color: red") money_off
                 | {{ version.total_budgetLeft !== undefined ? version.total_budgetLeft : '-' }}
-              //td(md-cell ng-class="{ 'overDeadline': version.isOverDeadline }") {{ version.releaseDate }}
-              //td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
-              //  span() {{ version.timespent[group] }}&nbsp;/&nbsp;{{ version.estimate[group] === undefined || version.estimate[group] === '' ? '-' : version.estimate[group] }}
       md-table-pagination(md-limit-options="[15,25,50,100]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")

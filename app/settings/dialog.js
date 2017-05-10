@@ -1,11 +1,18 @@
 import { getNewWageTimestamp, getLastWageTimestamp } from './helpers';
 
 export default class Dialog {
-  constructor($mdEditDialog) {
+  constructor($mdEditDialog, $mdToast) {
     this.$mdEditDialog = $mdEditDialog;
+    this.$mdToast = $mdToast;
+    this.editDialog = null;
   }
+
   get activeGroups() {
     return Object.keys(this.settings.groups).filter(key => this.settings.groups[key]).length;
+  }
+
+  isSubgroup(group) {
+    return !!~group.indexOf(':');
   }
 
   getCurrentWage(group) {
@@ -16,10 +23,10 @@ export default class Dialog {
   }
 
   editWage(event, group) {
-    // if (!this.localSettings.isEditEnabled) {
-    //   this.$mdToast.showSimple('Changes disabled (can be enabled in settings).');
-    //   return;
-    // }
+    if (!this.localSettings.isEditEnabled) {
+      this.$mdToast.showSimple('Changes disabled (can be enabled in settings).');
+      return;
+    }
 
     event.stopPropagation(); // in case autoselect is enabled
     this.$mdEditDialog.small({
@@ -39,7 +46,7 @@ export default class Dialog {
       validators: {
         'md-maxlength': 30,
       },
-    });
+    }).then(dialog => { this.editDialog = dialog; });
   }
 
   isValidNumber(value) {
@@ -53,7 +60,10 @@ export default class Dialog {
   }
 
   close() {
+    if (this.editDialog) {
+      this.editDialog.dismiss();
+    }
     this.$mdDialog.hide();
   }
 }
-Dialog.$inject = ['$mdEditDialog'];
+Dialog.$inject = ['$mdEditDialog', '$mdToast'];

@@ -2,22 +2,17 @@ export default class Dialog {
   constructor($mdEditDialog, $mdToast) {
     this.$mdEditDialog = $mdEditDialog;
     this.$mdToast = $mdToast;
+    this.editDialog = null;
   }
   get activeGroups() {
     return Object.keys(this.settings.groups).filter(key => this.settings.groups[key]);
   }
 
-  // save() {
-  //   Object.assign(settings, this.settings);
-  //   settings.$save();
-  //   this.close();
-  // }
-
   editGroupData(event, group, dataName) {
-    // if (!this.localSettings.isEditEnabled) {
-    //   this.$mdToast.showSimple('Changes disabled (can be enabled in settings).');
-    //   return;
-    // }
+    if (!this.localSettings.isEditEnabled) {
+      this.$mdToast.showSimple('Changes disabled (can be enabled in settings).');
+      return;
+    }
 
     event.stopPropagation(); // in case autoselect is enabled
     const version = this.version;
@@ -32,7 +27,7 @@ export default class Dialog {
         version.groupsData = version.groupsData || {};
         version.groupsData[dataName] = version.groupsData[dataName] || {};
         version.groupsData[dataName][group] =
-          this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : '';
+          this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : null;
 
         // this.reload(version);
         this.appCtrl.reload(version);
@@ -43,10 +38,13 @@ export default class Dialog {
       validators: {
         'md-maxlength': 30,
       },
-    });
+    }).then(dialog => { this.editDialog = dialog; });
   }
 
   close() {
+    if (this.editDialog) {
+      this.editDialog.dismiss();
+    }
     this.dialog.hide();
   }
 

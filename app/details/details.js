@@ -2,6 +2,7 @@ import module from '../module';
 import template from './details.pug';
 import dialogTemplate from './dialog.pug';
 import Dialog from './dialog';
+import './details.scss';
 
 class Settings {
   constructor($mdDialog) {

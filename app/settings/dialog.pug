@@ -23,15 +23,11 @@ md-dialog
           tr(md-row
           ng-repeat="(group, value) in $ctrl.settings.groups")
             td(md-cell)
-              md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
-            td(md-cell ng-click="$ctrl.settings.groups[group] = !$ctrl.settings.groups[group]")
+              md-checkbox(ng-model="$ctrl.settings.groups[group]" ng-disabled="$ctrl.isSubgroup(group)" aria-label="checkbox")
+            td(md-cell ng-click="!$ctrl.isSubgroup(group) ? $ctrl.settings.groups[group] = !$ctrl.settings.groups[group] : null")
               span() {{ group }}
             td(md-cell ng-click="$ctrl.editWage($event, group)")
               span() {{ $ctrl.getCurrentWage(group) || '-' }}
-    //md-list
-    //  md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.settings.groups")
-    //    md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
-    //    p {{ group }}
   md-dialog-actions
     md-button(ng-click="$ctrl.close()") Cancel
     md-button.md-primary(ng-click="$ctrl.save()") Save
