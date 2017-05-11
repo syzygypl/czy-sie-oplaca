@@ -12,14 +12,15 @@ export default class Dialog {
   }
 
   reloadTableData() {
+    this.version.groupsData = this.version.groupsData || {};
     this.tableData = this.activeGroups.map((item) => ({
       name: item,
-      budget: this.version.groupsData.budget[item],
-      hours: this.version.groupsData.hours[item],
-      timespentCosts: this.version.groupsData.timespentCosts[item],
-      costsEXT: this.version.groupsData.costsEXT[item],
-      budgetLeft: this.version.groupsData.budgetLeft[item],
-      timespent: this.version.timespent[item],
+      budget: this.version.groupsData.budget && this.version.groupsData.budget[item],
+      hours: this.version.groupsData.hours && this.version.groupsData.hours[item],
+      timespentCosts: this.version.groupsData.timespentCosts && this.version.groupsData.timespentCosts[item],
+      costsEXT: this.version.groupsData.costsEXT && this.version.groupsData.costsEXT[item],
+      budgetLeft: this.version.groupsData.budgetLeft && this.version.groupsData.budgetLeft[item],
+      timespent: this.version.timespent && this.version.timespent[item],
     }));
   }
 

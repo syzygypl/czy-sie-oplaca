@@ -1,1 +1,3 @@
-button.md-button(ng-click="$ctrl.open($event)") {{$ctrl.version.projectKey}} - {{ $ctrl.version.name }}
+button.md-button(ng-click="$ctrl.open($event)")
+  span {{$ctrl.version.projectKey}}
+  span(style="color: #808080")  - {{ $ctrl.version.name }}
