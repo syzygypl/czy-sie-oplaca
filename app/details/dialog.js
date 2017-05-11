@@ -3,9 +3,24 @@ export default class Dialog {
     this.$mdEditDialog = $mdEditDialog;
     this.$mdToast = $mdToast;
     this.editDialog = null;
+    this.orderBy = 'name';
+    this.reloadTableData();
   }
+
   get activeGroups() {
     return Object.keys(this.settings.groups).filter(key => this.settings.groups[key]);
+  }
+
+  reloadTableData() {
+    this.tableData = this.activeGroups.map((item) => ({
+      name: item,
+      budget: this.version.groupsData.budget[item],
+      hours: this.version.groupsData.hours[item],
+      timespentCosts: this.version.groupsData.timespentCosts[item],
+      costsEXT: this.version.groupsData.costsEXT[item],
+      budgetLeft: this.version.groupsData.budgetLeft[item],
+      timespent: this.version.timespent[item],
+    }));
   }
 
   editGroupData(event, group, dataName) {
@@ -29,8 +44,8 @@ export default class Dialog {
         version.groupsData[dataName][group] =
           this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : null;
 
-        // this.reload(version);
         this.appCtrl.reload(version);
+        this.reloadTableData();
         this.data.$save(version);
       },
       targetEvent: event,

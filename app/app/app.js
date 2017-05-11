@@ -21,7 +21,7 @@ class App {
       isEditEnabled: false,
     };
 
-    this.orderBy = 'releaseDate';
+    this.orderBy = 'projectKey';
     this.limit = 100;
     this.page = 1;
 

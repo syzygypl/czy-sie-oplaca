@@ -10,12 +10,12 @@ md-dialog
             table(md-table)
                 thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
                     tr(md-row)
-                        th(md-column md-order-by="group")
+                        th(md-column md-order-by="name")
                         th(md-column md-numeric md-desc  md-order-by="budget") Budżet (zł)
                         th(md-column md-numeric md-desc md-order-by="timespent") Godziny (zrealizowane/szacowane)
-                        th(md-column md-numeric md-desc  md-order-by="costsINT") Koszty wewnętrzne (zł)
+                        th(md-column md-numeric md-desc  md-order-by="timespentCosts") Koszty wewnętrzne (zł)
                         th(md-column md-numeric md-desc  md-order-by="costsEXT") Koszty zewnętrzne (zł)
-                        th(md-column md-numeric md-desc  md-order-by="costsDelta") &Delta; (zł)
+                        th(md-column md-numeric md-desc  md-order-by="budgetLeft") &Delta; (zł)
                 tbody(md-body)
                     tr.total-row(md-row)
                         td(md-cell) <b>Total</b>
@@ -28,17 +28,17 @@ md-dialog
                             md-icon(ng-show="$ctrl.version.total_budgetLeft <= 0" style="color: red") money_off
                             | {{ $ctrl.version.total_budgetLeft !== undefined ? $ctrl.version.total_budgetLeft : '-' }}
                     tr(md-row
-                    ng-repeat="group in $ctrl.activeGroups")
-                        td(md-cell) {{ group }}
-                        td(md-cell ng-click="$ctrl.editGroupData($event, group, 'budget')")
-                            span() {{ $ctrl.version.groupsData['budget'][group] !== undefined ? $ctrl.version.groupsData['budget'][group] : '-' }}
-                        td(md-cell ng-click="$ctrl.editGroupData($event, group, 'hours')")
-                            span() {{ $ctrl.version.timespent[group] }}&nbsp;/&nbsp;{{ $ctrl.version.groupsData['hours'][group] > 0 ? $ctrl.version.groupsData['hours'][group] : '-' }}
+                    ng-repeat="data in $ctrl.tableData | orderBy: $ctrl.orderBy")
+                        td(md-cell) {{ data.name }}
+                        td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'budget')")
+                            span() {{ data.budget > -1 ? data.budget : '-' }}
+                        td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'hours')")
+                            span() {{ data.timespent }}&nbsp;/&nbsp;{{ data.hours > -1 ? data.hours : '-' }}
                         td(md-cell)
-                            span() {{ $ctrl.version.groupsData['timespentCosts'][group] > 0 ? $ctrl.version.groupsData['timespentCosts'][group] : '-' }}
-                        td(md-cell ng-click="$ctrl.editGroupData($event, group, 'costsEXT')")
-                            span() {{ $ctrl.version.groupsData['costsEXT'][group] > 0 ? $ctrl.version.groupsData['costsEXT'][group] : '-' }}
+                            span() {{ data.timespentCosts > -1 ? data.timespentCosts : '-' }}
+                        td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'costsEXT')")
+                            span() {{ data.costsEXT > -1 ? data.costsEXT : '-' }}
                         td.budget-icon(md-cell)
-                            md-icon(ng-show="$ctrl.version.groupsData['budgetLeft'][group] > 0" style="color: green") monetization_on
-                            md-icon(ng-show="$ctrl.version.groupsData['budgetLeft'][group] <= 0" style="color: red") money_off
-                            | {{ $ctrl.version.groupsData['budgetLeft'][group] !== undefined ? $ctrl.version.groupsData['budgetLeft'][group] : '-' }}
+                            md-icon(ng-show="data.budgetLeft > 0" style="color: green") monetization_on
+                            md-icon(ng-show="data.budgetLeft <= 0" style="color: red") money_off
+                            | {{ data.budgetLeft !== undefined ? data.budgetLeft : '-' }}
