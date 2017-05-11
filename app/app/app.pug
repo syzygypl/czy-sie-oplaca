@@ -10,29 +10,32 @@ div(layout="column" style="height: 100vh; overflow: auto")
         input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.resetPagination()" placeholder="search")
         md-button.md-icon-button(ng-click="search.toggle = false; search.query = ''")
           md-icon close
-      settings(settings="$ctrl.settings" local-settings="$ctrl.localSettings")
+      settings(ng-if="$ctrl.userRole === 1" settings="$ctrl.settings" local-settings="$ctrl.localSettings")
   md-content(flex layout-padding)
+    div
+      md-button.md-raised(ng-click="$ctrl.showCurrent()") Bieżące projekty
+      md-button.md-raised(ng-click="$ctrl.showArchive()") Archiwum
     md-card
       md-table-container
         table(md-table md-progress="$ctrl.promise")
           thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
             tr(md-row)
               th(md-column md-order-by="projectKey") Nazwa projektu (wersja projektu w JiRA)
-              th(md-column md-numeric md-desc  md-order-by="total_budget") Budżet (zł)
+              th(md-column md-numeric md-desc md-order-by="total_budget") Budżet (zł)
               th(md-column md-numeric md-desc md-order-by="total_timespent") Godziny (zrealizowane/szacowane)
-              th(md-column md-numeric md-desc  md-order-by="total_timespentCosts") Koszty wewnętrzne (zł)
-              th(md-column md-numeric md-desc  md-order-by="total_costsEXT") Koszty zewnętrzne (zł)
-              th(md-column md-numeric md-desc  md-order-by="total_budgetLeft") Suma (zł)
+              th(md-column md-numeric md-desc md-order-by="total_timespentCosts") Koszty wewnętrzne (zł)
+              th(md-column md-numeric md-desc md-order-by="total_costsEXT") Koszty zewnętrzne (zł)
+              th(md-column md-numeric md-desc md-order-by="total_budgetLeft") Suma (zł)
           tbody(md-body)
             tr(md-row
                ng-repeat="version in $ctrl.versions | filter: search.query | orderBy: $ctrl.orderBy | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit")
               td(md-cell): cso-details(version="version" settings="$ctrl.settings" local-settings="$ctrl.localSettings" data="$ctrl.data" app-ctrl="$ctrl")
-              td(md-cell) {{ version.total_budget >= 0 ? version.total_budget : '-' }}
+              td(md-cell) {{ version.total_budget >= 0 ? (version.total_budget | csoCurrency) : '-' }}
               td(md-cell) {{ version.total_timespent }}&nbsp;/&nbsp;{{ version.total_hours >= 0 ? version.total_hours : '-' }}
-              td(md-cell) {{ version.total_timespentCosts >= 0 ? version.total_timespentCosts : '-' }}
-              td(md-cell) {{ version.total_costsEXT >= 0 ? version.total_costsEXT : '-' }}
+              td(md-cell) {{ version.total_timespentCosts >= 0 ? (version.total_timespentCosts | csoCurrency) : '-' }}
+              td(md-cell) {{ version.total_costsEXT >= 0 ? (version.total_costsEXT | csoCurrency) : '-' }}
               td.budget-icon(md-cell)
                 md-icon(ng-show="version.total_budgetLeft > 0" style="color: green") monetization_on
                 md-icon(ng-show="version.total_budgetLeft <= 0" style="color: red") money_off
-                | {{ version.total_budgetLeft !== undefined ? version.total_budgetLeft : '-' }}
+                | {{ version.total_budgetLeft !== undefined ? (version.total_budgetLeft | csoCurrency) : '-' }}
       md-table-pagination(md-limit-options="[15,25,50,100]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")

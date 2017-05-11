@@ -1,5 +1,7 @@
-.total-row.md-row {
+table.md-table tbody.md-body > tr.md-row.total-row.md-row {
+  height: 80px;
   td.md-cell {
     border-bottom: 2px solid rgba(0,0,0,0.12);
+    font-size: 15px;
   }
 }

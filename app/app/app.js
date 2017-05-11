@@ -7,8 +7,13 @@ import template from './app.pug';
 import './app.scss';
 import CostsCalc from './costsCalc';
 
+const getCookie = (name) => {
+  const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));
+  return match && match[1];
+};
+
 class App {
-  constructor($http, $firebaseArray, $firebaseObject, $mdEditDialog, $mdToast, $scope) {
+  constructor($firebaseArray, $firebaseObject, $mdEditDialog, $mdToast, $scope) {
     this.$mdEditDialog = $mdEditDialog;
     this.$mdToast = $mdToast;
     this.$scope = $scope;
@@ -19,6 +24,7 @@ class App {
       hideArchived: true,
       hideNotEstimated: true,
       isEditEnabled: false,
+      filterArchived: false,
     };
 
     this.orderBy = 'projectKey';
@@ -33,6 +39,7 @@ class App {
     this.resetPagination = this.resetPagination.bind(this);
     this.toast = this.toast.bind(this);
     this.toastPromise = null;
+    this.userRole = parseInt(getCookie('CSO_ROLE'), 10) || 2;
 
     this.promise.then(() => {
       this.costsCalculator = new CostsCalc(this.settings, this.worklogs, this.groups, this.toast);
@@ -41,9 +48,15 @@ class App {
   }
 
   get versions() {
-    return this.data.filter(v => !(this.localSettings.hideArchived && v.archived
-      || this.localSettings.hideReleased && v.released)
-      && (!this.localSettings.hideNotEstimated || v.isEstimated));
+    let data = this.data.filter(v => (!this.localSettings.hideNotEstimated || v.isEstimated));
+
+    if (this.localSettings.filterArchived) {
+      data = data.filter(v => v.released || v.archived);
+    } else {
+      data = data.filter(v => !(v.released || v.archived));
+    }
+
+    return data;
   }
 
   get groups() {
@@ -54,6 +67,14 @@ class App {
     }
 
     return [];
+  }
+
+  showArchive() {
+    this.localSettings.filterArchived = true;
+  }
+
+  showCurrent() {
+    this.localSettings.filterArchived = false;
   }
 
   toast(msg) {
@@ -99,9 +120,14 @@ class App {
   calculateTotalGroupData(v) {
     // Calculate total values of each group data
     Object.keys(v.groupsData).forEach(dataSet => {
-      v[`total_${dataSet}`] =
-        Object.values(v.groupsData[dataSet]).reduce((result, data) => result + data, 0);
+      v[`total_${dataSet}`] = Object
+        .values(v.groupsData[dataSet])
+        .reduce((result, data) => result + this.normalizeNumber(data), 0);
     });
+  }
+
+  normalizeNumber(number) {
+    return this.isValidNumber(number) ? number : 0;
   }
 
   resetPagination() {
@@ -112,7 +138,7 @@ class App {
     return !isNaN(parseFloat(value)) && Number(value) >= 0;
   }
 }
-App.$inject = ['$http', '$firebaseArray', '$firebaseObject', '$mdEditDialog', '$mdToast', '$scope'];
+App.$inject = ['$firebaseArray', '$firebaseObject', '$mdEditDialog', '$mdToast', '$scope'];
 
 module.component('app', {
   template,

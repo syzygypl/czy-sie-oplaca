@@ -17,7 +17,8 @@ export default class Dialog {
       name: item,
       budget: this.version.groupsData.budget && this.version.groupsData.budget[item],
       hours: this.version.groupsData.hours && this.version.groupsData.hours[item],
-      timespentCosts: this.version.groupsData.timespentCosts && this.version.groupsData.timespentCosts[item],
+      timespentCosts: this.version.groupsData.timespentCosts
+                      && this.version.groupsData.timespentCosts[item],
       costsEXT: this.version.groupsData.costsEXT && this.version.groupsData.costsEXT[item],
       budgetLeft: this.version.groupsData.budgetLeft && this.version.groupsData.budgetLeft[item],
       timespent: this.version.timespent && this.version.timespent[item],
@@ -43,7 +44,7 @@ export default class Dialog {
         version.groupsData = version.groupsData || {};
         version.groupsData[dataName] = version.groupsData[dataName] || {};
         version.groupsData[dataName][group] =
-          this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : null;
+          this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : 0;
 
         this.appCtrl.reload(version);
         this.reloadTableData();

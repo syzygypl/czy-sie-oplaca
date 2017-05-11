@@ -22,8 +22,6 @@ const data = JSON.parse(result.stdout);
 
 console.log('Processing firebase...');
 
-let logged = false;
-
 function didWorklogChange(worklog1, worklog2) {
   for (let key of Object.keys(worklog1)) {
     if (worklog1[key] !== worklog2[key]) return true;
@@ -82,20 +80,12 @@ function performUpdate(data, settingsRef, worklogsRef, versionsRef) {
   ]);
 }
 
-// var fs = require('fs');
-// fs.readFile("./jira-worklog.json", 'utf8', function(err, _data) {
-//   if(err) {
-//     return console.log(err);
-//   }
-//   const data = JSON.parse(_data);
-
-  performUpdate(
-    data,
-    settingsRef,
-    worklogsRef,
-    versionsRef
-  ).then(() => {
-    console.log('Firebase updated.');
-    process.exit(0);
-  });
-// });
+performUpdate(
+  data,
+  settingsRef,
+  worklogsRef,
+  versionsRef
+).then(() => {
+  console.log('Firebase updated.');
+  process.exit(0);
+});

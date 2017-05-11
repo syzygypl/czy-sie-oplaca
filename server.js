@@ -3,6 +3,7 @@ require('dotenv').config({ silent: true }); // Load local environment
 const express = require('express');
 const app = express();
 const basicAuth = require('basic-auth');
+var cookieParser = require('cookie-parser');
 
 app.set('port', (process.env.PORT));
 
@@ -22,8 +23,16 @@ app.use((req, res, next) => {
     return next();
   }
 
+  if (user.name === process.env.BASIC_AUTH_ADMIN_USER && user.pass === process.env.BASIC_AUTH_ADMIN_PASS) {
+    var minute = 60 * 1000;
+    res.cookie('CSO_ROLE', 1, { maxAge: minute })
+    return next();
+  }
+
   return unauthorized(res);
 });
+
+app.use(cookieParser());
 
 app.use(express.static(`${process.cwd()}/build`));
 

@@ -5,11 +5,9 @@ md-dialog
   md-dialog-content(layout-padding)
     md-divider Local settings (affect current session)
       md-subheader Estimates
-        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") enable estimate changes
+        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") enable changes
       md-subheader Versions
         p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") hide not estimated
-        p: md-checkbox(ng-model="$ctrl.localSettings.hideArchived" aria-label="checkbox") hide archived versions
-        p: md-checkbox(ng-model="$ctrl.localSettings.hideReleased" aria-label="checkbox") hide released versions
     md-divider Global settings (affect all users, change with care)
     md-subheader Active groups ({{ $ctrl.activeGroups }}) and wages
     md-table-container
