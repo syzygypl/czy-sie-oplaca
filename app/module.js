@@ -20,9 +20,14 @@ export default angular
       500: '#6e6',
     });
     $mdThemingProvider.definePalette('szgGreen', szgGreen);
+    const szgOrange = $mdThemingProvider.extendPalette('orange', {
+
+      '500': 'FFFF45',
+    });
+    $mdThemingProvider.definePalette('szgOrange', szgOrange);
     $mdThemingProvider.theme('default')
       .primaryPalette('szgGreen', { default: '500' })
-      .accentPalette('orange');
+      .accentPalette('szgOrange', { default: '500' });
   }])
   .value('$routerRootComponent', 'app');
 

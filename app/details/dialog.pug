@@ -20,11 +20,11 @@ md-dialog
                 tbody(md-body)
                     tr.total-row(md-row)
                         td(md-cell) <b>Total</b>
-                        td(md-cell) {{ $ctrl.version.total_budget >= 0 ? ($ctrl.version.total_budget | csoCurrency) : '-' }}
-                        td(md-cell) {{ $ctrl.version.total_timespent }}
-                        td(md-cell) {{ $ctrl.version.total_hours >= 0 ? $ctrl.version.total_hours : '-' }}
-                        td(md-cell) {{ $ctrl.version.total_timespentCosts >= 0 ? ($ctrl.version.total_timespentCosts | csoCurrency) : '-' }}
-                        td(md-cell) {{ $ctrl.version.total_costsEXT >= 0 ? $ctrl.version.total_costsEXT : '-' }}
+                        td(md-cell) <b>{{ $ctrl.version.total_budget >= 0 ? ($ctrl.version.total_budget | csoCurrency) : '-' }}</b>
+                        td(md-cell) <b>{{ $ctrl.version.total_timespent }}</b>
+                        td(md-cell) <b>{{ $ctrl.version.total_hours >= 0 ? $ctrl.version.total_hours : '-' }}</b>
+                        td(md-cell) <b>{{ $ctrl.version.total_timespentCosts >= 0 ? ($ctrl.version.total_timespentCosts | csoCurrency) : '-' }}</b>
+                        td(md-cell) <b>{{ $ctrl.version.total_costsEXT >= 0 ? $ctrl.version.total_costsEXT : '-' }}</b>
                         td(md-cell): cso-price-tag(budget="$ctrl.version.total_budgetLeft")
                     tr(md-row ng-repeat="data in $ctrl.tableData | orderBy: $ctrl.orderBy")
                         td(md-cell) {{ data.name }}
