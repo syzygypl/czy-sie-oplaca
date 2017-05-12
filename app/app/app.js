@@ -119,10 +119,19 @@ class App {
 
   calculateTotalGroupData(v) {
     // Calculate total values of each group data
+    const groups = this.groups;
+
     Object.keys(v.groupsData).forEach(dataSet => {
       v[`total_${dataSet}`] = Object
-        .values(v.groupsData[dataSet])
-        .reduce((result, data) => result + this.normalizeNumber(data), 0);
+        .keys(v.groupsData[dataSet])
+        .reduce((result, key) => {
+          if (!!~groups.indexOf(key)) {
+            const data = v.groupsData[dataSet][key];
+            return result + this.normalizeNumber(data)
+          } else {
+            return result;
+          }
+        }, 0);
     });
   }
 
