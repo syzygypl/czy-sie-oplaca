@@ -106,7 +106,6 @@ class App {
   calculateBudgetLeft(v) {
     v.groupsData.budgetLeft = v.groupsData.budgetLeft || {};
     v.groupsData.budget = v.groupsData.budget || {};
-    v.groupsData.budgetLeft = v.groupsData.budgetLeft || {};
     v.groupsData.timespentCosts = v.groupsData.timespentCosts || {};
     v.groupsData.costsEXT = v.groupsData.costsEXT || {};
     this.groups.forEach(group => {
@@ -127,16 +126,15 @@ class App {
         .reduce((result, key) => {
           if (!!~groups.indexOf(key)) {
             const data = v.groupsData[dataSet][key];
-            return result + this.normalizeNumber(data)
-          } else {
-            return result;
+            return result + this.normalizeNumber(data);
           }
+          return result;
         }, 0);
     });
   }
 
   normalizeNumber(number) {
-    return this.isValidNumber(number) ? number : 0;
+    return !isNaN(parseFloat(number)) ? number : 0;
   }
 
   resetPagination() {
