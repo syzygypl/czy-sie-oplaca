@@ -16,8 +16,12 @@ export default angular
     $locationProvider.html5Mode(true);
   }])
   .config(['$mdThemingProvider', ($mdThemingProvider) => {
+    const szgGreen = $mdThemingProvider.extendPalette('green', {
+      500: '#6e6',
+    });
+    $mdThemingProvider.definePalette('szgGreen', szgGreen);
     $mdThemingProvider.theme('default')
-      .primaryPalette('green', { default: '400' })
+      .primaryPalette('szgGreen', { default: '500' })
       .accentPalette('orange');
   }])
   .value('$routerRootComponent', 'app');

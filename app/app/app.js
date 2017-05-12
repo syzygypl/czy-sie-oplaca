@@ -41,6 +41,17 @@ class App {
     this.toastPromise = null;
     this.userRole = parseInt(getCookie('CSO_ROLE'), 10) || 2;
 
+    this.$scope.$watch(
+      '$ctrl.activeTab',
+      (newValue) => {
+        if (newValue === 1) {
+          this.showArchive();
+        } else {
+          this.showCurrent();
+        }
+      }
+    );
+
     this.promise.then(() => {
       this.costsCalculator = new CostsCalc(this.settings, this.worklogs, this.groups, this.toast);
       this.reload();

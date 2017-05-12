@@ -12,7 +12,8 @@ md-dialog
                     tr(md-row)
                         th(md-column md-order-by="name") Grupa
                         th(md-column md-numeric="true" md-desc md-order-by="budget") Budżet (zł)
-                        th(md-column md-numeric="true" md-desc md-order-by="timespent") Godziny (zrealizowane/szacowane)
+                        th(md-column md-numeric="true" md-desc md-order-by="timespent") Godziny zrealizowane
+                        th(md-column md-numeric="true" md-desc md-order-by="timespent") Godziny szacowane
                         th(md-column md-numeric="true" md-desc md-order-by="timespentCosts") Koszty wewnętrzne (zł)
                         th(md-column md-numeric="true" md-desc md-order-by="costsEXT") Koszty zewnętrzne (zł)
                         th(md-column md-numeric="true" md-desc md-order-by="budgetLeft") &Delta; (zł)
@@ -20,25 +21,21 @@ md-dialog
                     tr.total-row(md-row)
                         td(md-cell) <b>Total</b>
                         td(md-cell) {{ $ctrl.version.total_budget >= 0 ? ($ctrl.version.total_budget | csoCurrency) : '-' }}
-                        td(md-cell) {{ $ctrl.version.total_timespent }}&nbsp;/&nbsp;{{ $ctrl.version.total_hours >= 0 ? $ctrl.version.total_hours : '-' }}
+                        td(md-cell) {{ $ctrl.version.total_timespent }}
+                        td(md-cell) {{ $ctrl.version.total_hours >= 0 ? $ctrl.version.total_hours : '-' }}
                         td(md-cell) {{ $ctrl.version.total_timespentCosts >= 0 ? ($ctrl.version.total_timespentCosts | csoCurrency) : '-' }}
                         td(md-cell) {{ $ctrl.version.total_costsEXT >= 0 ? $ctrl.version.total_costsEXT : '-' }}
-                        td.budget-icon(md-cell)
-                            md-icon(ng-show="$ctrl.version.total_budgetLeft > 0" style="color: green") monetization_on
-                            md-icon(ng-show="$ctrl.version.total_budgetLeft <= 0" style="color: red") money_off
-                            | {{ $ctrl.version.total_budgetLeft !== undefined ? ($ctrl.version.total_budgetLeft | csoCurrency) : '-' }}
-                    tr(md-row
-                    ng-repeat="data in $ctrl.tableData | orderBy: $ctrl.orderBy")
+                        td(md-cell): cso-price-tag(budget="$ctrl.version.total_budgetLeft")
+                    tr(md-row ng-repeat="data in $ctrl.tableData | orderBy: $ctrl.orderBy")
                         td(md-cell) {{ data.name }}
                         td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'budget')")
                             span() {{ data.budget >= 0 ? (data.budget | csoCurrency) : '-' }}
+                        td(md-cell)
+                            span() {{ data.timespent }}
                         td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'hours')")
-                            span() {{ data.timespent }}&nbsp;/&nbsp;{{ data.hours >= 0 ? data.hours : '-' }}
+                            span() {{ data.hours >= 0 ? data.hours : '-' }}
                         td(md-cell)
                             span() {{ data.timespentCosts >= 0 ? (data.timespentCosts | csoCurrency) : '-' }}
                         td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'costsEXT')")
                             span() {{ data.costsEXT >= 0 ? (data.costsEXT | csoCurrency) : '-' }}
-                        td.budget-icon(md-cell)
-                            md-icon(ng-show="data.budgetLeft > 0" style="color: green") monetization_on
-                            md-icon(ng-show="data.budgetLeft <= 0" style="color: red") money_off
-                            | {{ data.budgetLeft !== undefined ? (data.budgetLeft | csoCurrency) : '-' }}
+                        td(md-cell): cso-price-tag(budget="data.budgetLeft")

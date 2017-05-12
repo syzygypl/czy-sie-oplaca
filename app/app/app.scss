@@ -52,11 +52,15 @@ app {
     color: black;
   }
 
-  .no-estimate {
-    color: #AAA;
+  .logo {
+    svg {
+      width: 150px;
+      height: 28px;
+      margin-right: 20px;
+    }
   }
-}
 
-.budget-icon {
-  white-space: nowrap;
+  .title {
+    color: #2e2e2e;
+  }
 }

@@ -1,0 +1,4 @@
+div.price-tag
+    span {{ $ctrl.budget !== undefined ? ($ctrl.budget | csoCurrency) : '-' }}
+    md-icon.price-tag__good(md-colors="{background: 'default-green-400'}" ng-show="$ctrl.budget > 0") check_circle
+    md-icon.price-tag__bad(ng-show="$ctrl.budget <= 0") remove_circle
