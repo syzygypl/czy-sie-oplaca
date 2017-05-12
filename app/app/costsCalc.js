@@ -1,3 +1,5 @@
+import groupTranslate from '../helpers/groupTranslate';
+
 const sortAsc = (arr) => arr.sort((a, b) => a - b);
 
 export default class CostsCalc {
@@ -97,7 +99,10 @@ export default class CostsCalc {
         if (remainingTime > 0) {
           const costs = this.calculateGroupCosts(group, worklogID, remainingTime);
           if (costs.totalTime === 0 && remainingTime) {
-            this.toast(`${v.name} | ${group} | omitted cost calculations (${remainingTime} hours)`);
+            this.toast(
+              `${v.name} | ${groupTranslate(group)} | 
+               omitted cost calculations (${remainingTime} hours)`
+            );
           }
 
           result = {

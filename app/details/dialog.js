@@ -1,3 +1,5 @@
+import groupTranslate from '../helpers/groupTranslate';
+
 export default class Dialog {
   constructor($mdEditDialog, $mdToast) {
     this.$mdEditDialog = $mdEditDialog;
@@ -14,7 +16,7 @@ export default class Dialog {
   reloadTableData() {
     this.version.groupsData = this.version.groupsData || {};
     this.tableData = this.activeGroups.map((item) => ({
-      name: item,
+      name: groupTranslate(item),
       budget: this.version.groupsData.budget && this.version.groupsData.budget[item],
       hours: this.version.groupsData.hours && this.version.groupsData.hours[item],
       timespentCosts: this.version.groupsData.timespentCosts

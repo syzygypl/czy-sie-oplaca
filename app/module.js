@@ -17,12 +17,11 @@ export default angular
   }])
   .config(['$mdThemingProvider', ($mdThemingProvider) => {
     const szgGreen = $mdThemingProvider.extendPalette('green', {
-      500: '#6e6',
+      500: '66ee66',
     });
     $mdThemingProvider.definePalette('szgGreen', szgGreen);
     const szgOrange = $mdThemingProvider.extendPalette('orange', {
-
-      '500': 'FFFF45',
+      500: 'FFFF45',
     });
     $mdThemingProvider.definePalette('szgOrange', szgOrange);
     $mdThemingProvider.theme('default')
