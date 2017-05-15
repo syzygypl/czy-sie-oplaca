@@ -23,7 +23,7 @@ const data = JSON.parse(result.stdout);
 console.log('Processing firebase...');
 
 function didWorklogChange(worklog1, worklog2) {
-  for (let key of Object.keys(worklog1)) {
+  for (var key of Object.keys(worklog1)) {
     if (worklog1[key] !== worklog2[key]) return true;
   }
 
