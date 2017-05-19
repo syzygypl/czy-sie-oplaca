@@ -12,7 +12,7 @@ div(layout="column" style="height: 100vh; overflow: auto")
         input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.resetPagination()" placeholder="search")
         md-button.md-icon-button(ng-click="search.toggle = false; search.query = ''")
           md-icon close
-      settings(ng-if="$ctrl.userRole === 1" settings="$ctrl.settings" local-settings="$ctrl.localSettings")
+      settings(settings="$ctrl.settings" local-settings="$ctrl.localSettings")
   md-content(flex layout-padding)
     md-tabs(md-selected="$ctrl.activeTab")
       md-tab(label="Bieżące projekty")

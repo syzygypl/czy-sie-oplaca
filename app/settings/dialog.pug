@@ -8,24 +8,25 @@ md-dialog
         p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") enable changes
       md-subheader Versions
         p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") hide not estimated
-    md-divider Global settings (affect all users, change with care)
-    md-subheader Active groups ({{ $ctrl.activeGroups }}) and wages
-    md-table-container
-      table(md-table)
-        thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
-          tr(md-row)
-            th(md-column)
-            th(md-column)
-            th(md-column) Wage
-        tbody(md-body)
-          tr(md-row
-          ng-repeat="(group, value) in $ctrl.settings.groups")
-            td(md-cell)
-              md-checkbox(ng-model="$ctrl.settings.groups[group]" ng-disabled="$ctrl.isSubgroup(group)" aria-label="checkbox")
-            td(md-cell ng-click="!$ctrl.isSubgroup(group) ? $ctrl.settings.groups[group] = !$ctrl.settings.groups[group] : null")
-              span() {{ group }}
-            td(md-cell ng-click="$ctrl.editWage($event, group)")
-              span() {{ $ctrl.getCurrentWage(group) || '-' }}
+    div(ng-if="$ctrl.userRole === 1")
+      md-divider Global settings (affect all users, change with care)
+      md-subheader Active groups ({{ $ctrl.activeGroups }}) and wages
+      md-table-container
+        table(md-table)
+          thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
+            tr(md-row)
+              th(md-column)
+              th(md-column)
+              th(md-column) Wage
+          tbody(md-body)
+            tr(md-row
+            ng-repeat="(group, value) in $ctrl.settings.groups")
+              td(md-cell)
+                md-checkbox(ng-model="$ctrl.settings.groups[group]" ng-disabled="$ctrl.isSubgroup(group)" aria-label="checkbox")
+              td(md-cell ng-click="!$ctrl.isSubgroup(group) ? $ctrl.settings.groups[group] = !$ctrl.settings.groups[group] : null")
+                span() {{ group }}
+              td(md-cell ng-click="$ctrl.editWage($event, group)")
+                span() {{ $ctrl.getCurrentWage(group) || '-' }}
   md-dialog-actions
     md-button(ng-click="$ctrl.close()") Cancel
     md-button.md-primary(ng-click="$ctrl.save()") Save

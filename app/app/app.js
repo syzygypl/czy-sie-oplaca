@@ -7,11 +7,6 @@ import template from './app.pug';
 import './app.scss';
 import CostsCalc from './costsCalc';
 
-const getCookie = (name) => {
-  const match = document.cookie.match(new RegExp(`${name}=([^;]+)`));
-  return match && match[1];
-};
-
 class App {
   constructor($firebaseArray, $firebaseObject, $mdEditDialog, $mdToast, $scope) {
     this.$mdEditDialog = $mdEditDialog;
@@ -39,7 +34,6 @@ class App {
     this.resetPagination = this.resetPagination.bind(this);
     this.toast = this.toast.bind(this);
     this.toastPromise = null;
-    this.userRole = parseInt(getCookie('CSO_ROLE'), 10) || 2;
 
     this.$scope.$watch(
       '$ctrl.activeTab',

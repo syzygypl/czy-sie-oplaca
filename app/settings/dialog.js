@@ -1,10 +1,12 @@
 import { getNewWageTimestamp, getLastWageTimestamp } from './helpers';
+import userRole from '../helpers/userRole';
 
 export default class Dialog {
   constructor($mdEditDialog, $mdToast) {
     this.$mdEditDialog = $mdEditDialog;
     this.$mdToast = $mdToast;
     this.editDialog = null;
+    this.userRole = userRole;
   }
 
   get activeGroups() {
