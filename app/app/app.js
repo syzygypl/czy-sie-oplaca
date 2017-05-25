@@ -61,6 +61,8 @@ class App {
       data = data.filter(v => !(v.released || v.archived));
     }
 
+    data = data.filter(v => !v.hidden);
+
     return data;
   }
 

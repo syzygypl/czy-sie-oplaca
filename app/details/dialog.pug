@@ -2,7 +2,7 @@ md-dialog
     md-toolbar.md-whiteframe-1dp
         .md-toolbar-tools
             div(flex)
-                .md-title {{ $ctrl.version.name }} {{ $ctrl.version.id }}
+                .md-title {{$ctrl.version.projectKey}} - {{ $ctrl.version.name }}
             md-button.md-icon-button(ng-click="$ctrl.close()")
                 md-icon close
     md-dialog-content(layout-padding)
@@ -11,7 +11,7 @@ md-dialog
                 thead(md-head md-order="$ctrl.orderBy")
                     tr(md-row)
                         th(md-column md-order-by="name") Grupa
-                        th(md-column md-numeric="true" md-desc md-order-by="budget") Budżet (zł)
+                        th(md-column md-numeric="true" md-desc md-order-by="budget") Kosztorys
                         th(md-column md-numeric="true" md-desc md-order-by="timespent") Godziny zrealizowane
                         th(md-column md-numeric="true" md-desc md-order-by="timespent") Godziny szacowane
                         th(md-column md-numeric="true" md-desc md-order-by="timespentCosts") Koszty wew.

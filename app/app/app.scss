@@ -67,4 +67,13 @@ app {
     color: #2e2e2e;
     font-size: 16px;
   }
+
+  .version-title {
+    max-width: 270px;
+    text-overflow: ellipsis;
+    color: #808080;
+    .exposed {
+      color: black;
+    }
+  }
 }

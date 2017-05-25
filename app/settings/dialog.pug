@@ -1,23 +1,23 @@
 md-dialog
   md-toolbar.md-whiteframe-1dp
     .md-toolbar-tools
-      .md-title Settings
+      .md-title Ustawienia
   md-dialog-content(layout-padding)
-    md-divider Local settings (affect current session)
-      md-subheader Estimates
-        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") enable changes
-      md-subheader Versions
-        p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") hide not estimated
+    md-divider Ustawienia lokalne
+      md-subheader Kosztorysy i estymacje
+        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") zezwalaj na zmiany
+      md-subheader Wersje projektów
+        p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") ukryj nieoszacowane
     div(ng-if="$ctrl.userRole === 1")
-      md-divider Global settings (affect all users, change with care)
-      md-subheader Active groups ({{ $ctrl.activeGroups }}) and wages
+      md-divider Ustawienia globalne (ma wpływ na wszystkich użytkowniów aplikacji)
+      md-subheader Aktywne grupy i stawki
       md-table-container
         table(md-table)
           thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
             tr(md-row)
               th(md-column)
               th(md-column)
-              th(md-column) Wage
+              th(md-column) Stawka godzinowa
           tbody(md-body)
             tr(md-row
             ng-repeat="(group, value) in $ctrl.settings.groups")
@@ -28,5 +28,5 @@ md-dialog
               td(md-cell ng-click="$ctrl.editWage($event, group)")
                 span() {{ $ctrl.getCurrentWage(group) || '-' }}
   md-dialog-actions
-    md-button(ng-click="$ctrl.close()") Cancel
-    md-button.md-primary(ng-click="$ctrl.save()") Save
+    md-button(ng-click="$ctrl.close()") Anuluj
+    md-button.md-primary(ng-click="$ctrl.save()") Zapisz
