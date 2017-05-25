@@ -1,0 +1,16 @@
+.price-tag {
+  white-space: nowrap;
+
+  span {
+    margin-right: 20px;
+    font-weight: bold;
+  }
+
+  &__good {
+    color: #6e6;
+  }
+
+  &__bad {
+    color: #d40606;
+  }
+}

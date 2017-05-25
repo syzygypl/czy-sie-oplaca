@@ -5,11 +5,13 @@ firebase.authWithCustomToken(process.env.FIREBASE_SECRET);
 import module from '../module';
 import template from './app.pug';
 import './app.scss';
+import CostsCalc from './costsCalc';
 
 class App {
-  constructor($http, $firebaseArray, $firebaseObject, $mdEditDialog, $mdToast) {
+  constructor($firebaseArray, $firebaseObject, $mdEditDialog, $mdToast, $scope) {
     this.$mdEditDialog = $mdEditDialog;
     this.$mdToast = $mdToast;
+    this.$scope = $scope;
 
     this.settings = $firebaseObject(firebase.child('settings'));
     this.localSettings = {
@@ -17,24 +19,51 @@ class App {
       hideArchived: true,
       hideNotEstimated: true,
       isEditEnabled: false,
+      filterArchived: false,
     };
-    this.orderBy = 'releaseDate';
-    this.jiraHost = process.env.JIRA_HOST;
+
+    this.orderBy = 'projectKey';
     this.limit = 100;
     this.page = 1;
 
     this.data = $firebaseArray(firebase.child('versions'));
-    this.promise = this.data.$loaded();
+    this.worklogs = $firebaseObject(firebase.child('worklogs'));
+    this.promise = Promise.all([this.data.$loaded(), this.worklogs.$loaded()]);
 
-    this.data.$loaded().then(() => this.reload());
+
     this.resetPagination = this.resetPagination.bind(this);
+    this.toast = this.toast.bind(this);
+    this.toastPromise = null;
+
+    this.$scope.$watch(
+      '$ctrl.activeTab',
+      (newValue) => {
+        if (newValue === 1) {
+          this.showArchive();
+        } else {
+          this.showCurrent();
+        }
+      }
+    );
+
+    this.promise.then(() => {
+      this.costsCalculator = new CostsCalc(this.settings, this.worklogs, this.groups, this.toast);
+      this.reload();
+    });
   }
 
   get versions() {
-    // return this.data;
-    return this.data.filter(v => !(this.localSettings.hideArchived && v.archived
-      || this.localSettings.hideReleased && v.released)
-      && (!this.localSettings.hideNotEstimated || v.isEstimated));
+    let data = this.data.filter(v => (!this.localSettings.hideNotEstimated || v.isEstimated));
+
+    if (this.localSettings.filterArchived) {
+      data = data.filter(v => v.released || v.archived);
+    } else {
+      data = data.filter(v => !(v.released || v.archived));
+    }
+
+    data = data.filter(v => !v.hidden);
+
+    return data;
   }
 
   get groups() {
@@ -47,71 +76,83 @@ class App {
     return [];
   }
 
+  showArchive() {
+    this.localSettings.filterArchived = true;
+  }
+
+  showCurrent() {
+    this.localSettings.filterArchived = false;
+  }
+
+  toast(msg) {
+    if (!this.toastPromise) {
+      this.toastPromise = this.$mdToast.showSimple(msg);
+      this.toastPromise.then(() => { this.toastPromise = null; });
+    } else {
+      this.toastPromise.then(() => {
+        this.toast(msg);
+      });
+    }
+  }
+
   reload(version) {
     const data = version ? [version] : this.data;
-
     data.forEach(v => {
       v.isOverDeadline = v.releaseDate ? new Date(v.releaseDate).getTime() < Date.now() : false;
-
-      v.totalTimespent = v.budget = 0;
-      v.totalEstimate = null;
       v.isEstimated = false;
 
-      if (v.estimate) {
-        this.groups.forEach(group => {
-          if (this.isValidNumber(v.estimate[group])) {
-            v.totalTimespent += v.timespent[group] || 0;
-            if (v.totalEstimate === null) {
-              v.totalEstimate = 0;
-              v.isEstimated = true;
-            }
-            v.totalEstimate += v.estimate[group] || 0;
-          }
-        });
-      }
-
-      if (v.totalEstimate) {
-        v.budget = Math.round((v.totalTimespent / v.totalEstimate) * 100);
+      if (v.groupsData) {
+        v.isEstimated = true;
+        this.costsCalculator.calculateTimespentCosts(v);
+        this.calculateBudgetLeft(v);
+        this.calculateTotalGroupData(v);
       }
     });
+  }
+
+  calculateBudgetLeft(v) {
+    v.groupsData.budgetLeft = v.groupsData.budgetLeft || {};
+    v.groupsData.budget = v.groupsData.budget || {};
+    v.groupsData.timespentCosts = v.groupsData.timespentCosts || {};
+    v.groupsData.costsEXT = v.groupsData.costsEXT || {};
+    this.groups.forEach(group => {
+      v.groupsData.budgetLeft[group] =
+        (v.groupsData.budget[group] || 0)
+        - (v.groupsData.timespentCosts[group] || 0)
+        - (v.groupsData.costsEXT[group] || 0);
+    });
+  }
+
+  calculateTotalGroupData(v) {
+    // Calculate total values of each group data
+    const groups = this.groups;
+
+    Object.keys(v.groupsData).forEach(dataSet => {
+      v[`total_${dataSet}`] = Object
+        .keys(v.groupsData[dataSet])
+        .reduce((result, key) => {
+          if (!!~groups.indexOf(key)) {
+            const data = v.groupsData[dataSet][key];
+            return result + this.normalizeNumber(data);
+          }
+          return result;
+        }, 0);
+    });
+  }
+
+  normalizeNumber(number) {
+    return !isNaN(parseFloat(number)) ? number : 0;
   }
 
   resetPagination() {
     this.page = 1;
   }
 
-  editEstimate($event, version, group) {
-    if (!this.localSettings.isEditEnabled) {
-      this.$mdToast.showSimple('Changes disabled (can be enabled in settings).');
-      return;
-    }
-
-    event.stopPropagation(); // in case autoselect is enabled
-
-    this.$mdEditDialog.small({
-      modelValue: version.estimate && version.estimate[group],
-      placeholder: 'Add estimation',
-      save: (input) => {
-        version.estimate = version.estimate || {};
-        version.estimate[group] =
-            this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : '';
-
-        this.reload(version);
-        this.data.$save(version);
-      },
-      targetEvent: event,
-      title: 'Add estimation',
-      validators: {
-        'md-maxlength': 30,
-      },
-    });
-  }
-
   isValidNumber(value) {
     return !isNaN(parseFloat(value)) && Number(value) >= 0;
   }
 }
-App.$inject = ['$http', '$firebaseArray', '$firebaseObject', '$mdEditDialog', '$mdToast'];
+App.$inject = ['$firebaseArray', '$firebaseObject', '$mdEditDialog', '$mdToast', '$scope'];
 
 module.component('app', {
   template,

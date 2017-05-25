@@ -1,21 +1,32 @@
 md-dialog
   md-toolbar.md-whiteframe-1dp
     .md-toolbar-tools
-      .md-title Settings
+      .md-title Ustawienia
   md-dialog-content(layout-padding)
-    md-divider Local settings (affect current session)
-      md-subheader Estimates
-        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") enable estimate changes
-      md-subheader Versions
-        p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") hide not estimated
-        p: md-checkbox(ng-model="$ctrl.localSettings.hideArchived" aria-label="checkbox") hide archived versions
-        p: md-checkbox(ng-model="$ctrl.localSettings.hideReleased" aria-label="checkbox") hide released versions
-    md-divider Global settings (affect all users, change with care)
-    md-subheader Active groups ({{ $ctrl.activeGroups }})
-    md-list
-      md-list-item.secondary-button-padding(ng-repeat="(group, value) in $ctrl.settings.groups")
-        md-checkbox(ng-model="$ctrl.settings.groups[group]" aria-label="checkbox")
-        p {{ group }}
+    md-divider Ustawienia lokalne
+      md-subheader Kosztorysy i estymacje
+        p: md-checkbox(ng-model="$ctrl.localSettings.isEditEnabled" aria-label="checkbox") zezwalaj na zmiany
+      md-subheader Wersje projektów
+        p: md-checkbox(ng-model="$ctrl.localSettings.hideNotEstimated" aria-label="checkbox") ukryj nieoszacowane
+    div(ng-if="$ctrl.userRole === 1")
+      md-divider Ustawienia globalne (ma wpływ na wszystkich użytkowniów aplikacji)
+      md-subheader Aktywne grupy i stawki
+      md-table-container
+        table(md-table)
+          thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
+            tr(md-row)
+              th(md-column)
+              th(md-column)
+              th(md-column) Stawka godzinowa
+          tbody(md-body)
+            tr(md-row
+            ng-repeat="(group, value) in $ctrl.settings.groups")
+              td(md-cell)
+                md-checkbox(ng-model="$ctrl.settings.groups[group]" ng-disabled="$ctrl.isSubgroup(group)" aria-label="checkbox")
+              td(md-cell ng-click="!$ctrl.isSubgroup(group) ? $ctrl.settings.groups[group] = !$ctrl.settings.groups[group] : null")
+                span() {{ group }}
+              td(md-cell ng-click="$ctrl.editWage($event, group)")
+                span() {{ $ctrl.getCurrentWage(group) || '-' }}
   md-dialog-actions
-    md-button(ng-click="$ctrl.close()") Cancel
-    md-button.md-primary(ng-click="$ctrl.save()") Save
+    md-button(ng-click="$ctrl.close()") Anuluj
+    md-button.md-primary(ng-click="$ctrl.save()") Zapisz

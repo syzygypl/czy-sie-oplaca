@@ -2,42 +2,41 @@ doctype html
 div(layout="column" style="height: 100vh; overflow: auto")
   md-toolbar.md-whiteframe-1dp
     .md-toolbar-tools
+      .logo
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262.04 47.86"><path class="cls-1" d="M381.13,443.28c-3.48,2.09-9.2,2.86-13.52,2.86-13.28,0-21.52-9.53-21.52-23.5,0-13.21,7.76-24.14,20.55-24.14a21.12,21.12,0,0,1,14,5.72,2.17,2.17,0,0,1,.85,1.65,1.78,1.78,0,0,1-1.51,1.64,2.35,2.35,0,0,1-1.56-.82,18,18,0,0,0-11.72-4.77c-10.83,0-17.38,9.71-17.38,20.89,0,11.75,6.92,19.88,18.16,19.88,3.67,0,8.48-.64,11.54-2.41V427.39h-9.74c-1.43,0-2-.69-2-1.71s.61-1.72,2-1.72h11.85c.79,0,1.14.51,1.14,1.27v15.71a2.21,2.21,0,0,1-1.14,2.34" transform="translate(-165.89 -398.28)"/><path class="cls-1" d="M314.33,446a1.84,1.84,0,0,1-1.84-1.83V424.48c0-1.43.13-1.79,1.19-3.26,3-4.12,16.09-22.19,16.09-22.19a1.84,1.84,0,0,1,3,2.16s-13.46,18.56-16.09,22.19a2.79,2.79,0,0,0-.49,1.79v19a1.84,1.84,0,0,1-1.84,1.83" transform="translate(-165.89 -398.28)"/><path class="cls-1" d="M291.78,400.35a1.63,1.63,0,0,0-.56-1.14,1.75,1.75,0,0,0-1.13-.51h-30.8a3,3,0,0,0-1.87.47,1.63,1.63,0,0,0,0,2.4,3.12,3.12,0,0,0,1.88.44h27.19l-29.55,40.8a2.73,2.73,0,0,0-.68,1.51,1.36,1.36,0,0,0,.6,1.09,2.25,2.25,0,0,0,1.31.43h30.95a3.08,3.08,0,0,0,1.84-.45,1.57,1.57,0,0,0,0-2.39,3,3,0,0,0-1.84-.47H261.34l29.83-40.74.12.08-.11-.09a2.5,2.5,0,0,0,.61-1.44" transform="translate(-165.89 -398.28)"/><path class="cls-1" d="M409.17,446a1.84,1.84,0,0,1-1.84-1.83V424.48c0-1.43.13-1.79,1.19-3.26,3-4.12,16.09-22.19,16.09-22.19a1.84,1.84,0,0,1,3,2.16s-13.46,18.56-16.09,22.19a2.79,2.79,0,0,0-.49,1.79v19a1.84,1.84,0,0,1-1.84,1.83" transform="translate(-165.89 -398.28)"/><path class="cls-1" d="M188.81,421l-7.5-1.13c-6.16-.94-10.07-4.35-10.07-8.38,0-7,5.61-9.63,11.91-9.63h.18c5.81,0,12.62,3.08,12.62,9.45,0,1.39.68,2,1.69,2s1.7-.57,1.7-2c0-7.09-5.66-12.21-16-12.78h-.06c-8.44,0-15.42,4.35-15.42,13,0,6.87,6.86,10.89,13,11.84l7.43,1.14c4.21.68,9.07,3.27,9.07,8.37,0,6.92-7.69,9.76-13.91,9.76-7.31,0-14.17-4-14.17-10.83,0-1.39-.68-2-1.7-2s-1.69.57-1.69,2c0,7.43,6.41,14.16,17.69,14.16,12.78,0,17.18-8.05,17.18-13.15,0-6.74-6-10.83-12-11.78" transform="translate(-165.89 -398.28)"/><path class="cls-1" d="M222.72,446a1.84,1.84,0,0,1-1.84-1.83V424.48c0-1.43.13-1.79,1.19-3.26,3-4.12,16.09-22.19,16.09-22.19a1.84,1.84,0,0,1,3,2.16S227.67,419.75,225,423.38a2.79,2.79,0,0,0-.49,1.79v19a1.84,1.84,0,0,1-1.84,1.83" transform="translate(-165.89 -398.28)"/></svg>
       div(flex ng-if="!search.toggle")
-        .md-title Czy Sie Oplaca
+        .md-title.title Czy Się Opłaca
       md-button.md-icon-button(ng-click="search.toggle = true")
-        md-icon search
+        md-icon wyszukaj projekt
       div(ng-if="search.toggle" layout="row" flex)
         input.search-input(type="text" autofocus flex="1" ng-model="search.query" ng-change="$ctrl.resetPagination()" placeholder="search")
         md-button.md-icon-button(ng-click="search.toggle = false; search.query = ''")
           md-icon close
       settings(settings="$ctrl.settings" local-settings="$ctrl.localSettings")
   md-content(flex layout-padding)
+    md-tabs(md-selected="$ctrl.activeTab")
+      md-tab(label="Bieżące projekty")
+      md-tab(label="Archiwum")
     md-card
       md-table-container
         table(md-table md-progress="$ctrl.promise")
           thead(md-head md-order="$ctrl.orderBy" md-on-reorder="$ctrl.resetPagination")
             tr(md-row)
-              th(md-column md-order-by="projectKey") Project Key
-              th(md-column md-order-by="name") Name
-              th(md-column md-numeric md-desc md-order-by="budget") Progress
-              th(md-column md-order-by="releaseDate") Deadline
-              th(md-column md-numeric md-desc md-order-by="timespent['{{ group }}']" ng-repeat="group in $ctrl.groups")
-                md-tooltip {{ group }}
-                | {{ group | limitTo: 8 }}
-                span(ng-show="group.length > 8") ...
-              th(md-column md-numeric md-desc md-order-by="totalTimespent") Total
+              th(md-column md-order-by="projectKey") Nazwa projektu (wersja projektu w JiRA)
+              th(md-column md-numeric md-desc md-order-by="total_budget") Kosztorys
+              th(md-column md-numeric md-desc md-order-by="total_timespent") Godziny zrealizowane
+              th(md-column md-numeric md-desc md-order-by="total_timespent") Godziny szacowane
+              th(md-column md-numeric md-desc md-order-by="total_timespentCosts") Koszty wew.
+              th(md-column md-numeric md-desc md-order-by="total_costsEXT") Koszty zew.
+              th(md-column md-numeric md-desc md-order-by="total_budgetLeft") Suma
           tbody(md-body)
             tr(md-row
-               ng-repeat="version in $ctrl.versions | filter: search.query | orderBy: $ctrl.orderBy | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit"
-               ng-class="{ 'high': version.budget > 80, 'over': version.budget > 100, 'empty-estimate' : !version.isEstimated}")
-              td(md-cell): a.md-button(href="//{{ $ctrl.jiraHost }}/browse/{{ version.projectKey }}" target="_blank") {{ version.projectKey }}
-              td(md-cell)
-                md-icon(ng-show="version.released") done
-                md-icon(ng-show="version.archived") delete
-                | {{ version.name }}
-              td(md-cell) {{ version.budget }}%
-              td(md-cell ng-class="{ 'overDeadline': version.isOverDeadline }") {{ version.releaseDate }}
-              td(md-cell ng-repeat="group in $ctrl.groups" ng-click="$ctrl.editEstimate($event, version, group)")
-                span() {{ version.timespent[group] }}&nbsp;/&nbsp;{{ version.estimate[group] === undefined || version.estimate[group] === '' ? '-' : version.estimate[group] }}
-              td(md-cell) {{ version.totalTimespent }}&nbsp;/&nbsp;{{ version.totalEstimate >= 0 ? version.totalEstimate : '-' }}
-      md-table-pagination(md-limit-options="[15,25,50,100]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")
+               ng-repeat="version in $ctrl.versions | filter: search.query | orderBy: $ctrl.orderBy | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit")
+              td(md-cell): cso-details(version="version" settings="$ctrl.settings" local-settings="$ctrl.localSettings" data="$ctrl.data" app-ctrl="$ctrl")
+              td(md-cell) {{ version.total_budget >= 0 ? (version.total_budget | csoCurrency) : '-' }}
+              td(md-cell) {{ version.total_timespent }}
+              td(md-cell) {{ version.total_hours >= 0 ? version.total_hours : '-' }}
+              td(md-cell) {{ version.total_timespentCosts >= 0 ? (version.total_timespentCosts | csoCurrency) : '-' }}
+              td(md-cell) {{ version.total_costsEXT >= 0 ? (version.total_costsEXT | csoCurrency) : '-' }}
+              td(md-cell): cso-price-tag(budget="version.total_budgetLeft")
+      md-table-pagination(md-label='{"rowsPerPage": "Wierszy na stronie:", "of": "z", "page": "Strona:"}' md-limit-options="[15,25,50,100]" md-limit="$ctrl.limit" md-page="$ctrl.page" md-total="{{($ctrl.versions | filter: search.query).length}}")

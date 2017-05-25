@@ -52,7 +52,28 @@ app {
     color: black;
   }
 
-  .no-estimate {
-    color: #AAA;
+  .logo {
+    svg {
+      width: 120px;
+      height: 30px;
+      margin-right: 20px;
+      path {
+        fill: #fff;
+      }
+    }
+  }
+
+  .title {
+    color: #2e2e2e;
+    font-size: 16px;
+  }
+
+  .version-title {
+    max-width: 270px;
+    text-overflow: ellipsis;
+    color: #808080;
+    .exposed {
+      color: black;
+    }
   }
 }

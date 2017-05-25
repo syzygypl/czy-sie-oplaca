@@ -16,9 +16,17 @@ export default angular
     $locationProvider.html5Mode(true);
   }])
   .config(['$mdThemingProvider', ($mdThemingProvider) => {
+    const szgGreen = $mdThemingProvider.extendPalette('green', {
+      500: '66ee66',
+    });
+    $mdThemingProvider.definePalette('szgGreen', szgGreen);
+    const szgOrange = $mdThemingProvider.extendPalette('orange', {
+      500: 'FFFF45',
+    });
+    $mdThemingProvider.definePalette('szgOrange', szgOrange);
     $mdThemingProvider.theme('default')
-      .primaryPalette('green', { default: '400' })
-      .accentPalette('orange');
+      .primaryPalette('szgGreen', { default: '500' })
+      .accentPalette('szgOrange', { default: '500' });
   }])
   .value('$routerRootComponent', 'app');
 

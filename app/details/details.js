@@ -1,7 +1,8 @@
 import module from '../module';
-import template from './settings.pug';
+import template from './details.pug';
 import dialogTemplate from './dialog.pug';
 import Dialog from './dialog';
+import './details.scss';
 
 class Settings {
   constructor($mdDialog) {
@@ -10,10 +11,8 @@ class Settings {
 
   open($event) {
     const $mdDialog = this.$mdDialog;
-    const settings = this.settings;
-    const cloneSettings = Object.assign({}, this.settings);
-    cloneSettings.groups = Object.assign({}, this.settings.groups);
-    cloneSettings.wages = Object.assign({}, this.settings.wages);
+    const version = this.version;
+    const data = this.data;
 
     $mdDialog.show({
       targetEvent: $event,
@@ -22,21 +21,26 @@ class Settings {
       controllerAs: '$ctrl',
       bindToController: true,
       locals: {
-        settings: cloneSettings,
-        originalSettings: settings,
+        dialog: $mdDialog,
+        version,
         localSettings: this.localSettings,
-        $mdDialog,
+        settings: this.settings,
+        data,
+        appCtrl: this.appCtrl,
       },
     });
   }
 }
 Settings.$inject = ['$mdDialog'];
 
-module.component('settings', {
+module.component('csoDetails', {
   template,
   controller: Settings,
   bindings: {
+    version: '<',
     settings: '<',
     localSettings: '<',
+    data: '<',
+    appCtrl: '<',
   },
 });
