@@ -28,14 +28,14 @@ md-dialog
                         td(md-cell): cso-price-tag(budget="$ctrl.version.total_budgetLeft")
                     tr(md-row ng-repeat="data in $ctrl.tableData | orderBy: $ctrl.orderBy")
                         td(md-cell) {{ data.name }}
-                        td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'budget')")
+                        td(md-cell ng-click="$ctrl.editGroupData($event, data.originalGroupName, 'budget')")
                             span() {{ data.budget >= 0 ? (data.budget | csoCurrency) : '-' }}
                         td(md-cell)
                             span() {{ data.timespent }}
-                        td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'hours')")
+                        td(md-cell ng-click="$ctrl.editGroupData($event, data.originalGroupName, 'hours')")
                             span() {{ data.hours >= 0 ? data.hours : '-' }}
                         td(md-cell)
                             span() {{ data.timespentCosts >= 0 ? (data.timespentCosts | csoCurrency) : '-' }}
-                        td(md-cell ng-click="$ctrl.editGroupData($event, data.name, 'costsEXT')")
+                        td(md-cell ng-click="$ctrl.editGroupData($event, data.originalGroupName, 'costsEXT')")
                             span() {{ data.costsEXT >= 0 ? (data.costsEXT | csoCurrency) : '-' }}
                         td(md-cell): cso-price-tag(budget="data.budgetLeft")

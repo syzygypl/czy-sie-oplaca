@@ -15,15 +15,16 @@ export default class Dialog {
 
   reloadTableData() {
     this.version.groupsData = this.version.groupsData || {};
-    this.tableData = this.activeGroups.map((item) => ({
-      name: groupTranslate(item),
-      budget: this.version.groupsData.budget && this.version.groupsData.budget[item],
-      hours: this.version.groupsData.hours && this.version.groupsData.hours[item],
+    this.tableData = this.activeGroups.map((group) => ({
+      name: groupTranslate(group),
+      originalGroupName: group,
+      budget: this.version.groupsData.budget && this.version.groupsData.budget[group],
+      hours: this.version.groupsData.hours && this.version.groupsData.hours[group],
       timespentCosts: this.version.groupsData.timespentCosts
-                      && this.version.groupsData.timespentCosts[item],
-      costsEXT: this.version.groupsData.costsEXT && this.version.groupsData.costsEXT[item],
-      budgetLeft: this.version.groupsData.budgetLeft && this.version.groupsData.budgetLeft[item],
-      timespent: this.version.timespent && this.version.timespent[item],
+                      && this.version.groupsData.timespentCosts[group],
+      costsEXT: this.version.groupsData.costsEXT && this.version.groupsData.costsEXT[group],
+      budgetLeft: this.version.groupsData.budgetLeft && this.version.groupsData.budgetLeft[group],
+      timespent: this.version.timespent && this.version.timespent[group],
     }));
   }
 
@@ -49,8 +50,8 @@ export default class Dialog {
           this.isValidNumber(input.$modelValue) ? Number(input.$modelValue) : 0;
 
         this.appCtrl.reload(version);
-        this.reloadTableData();
         this.data.$save(version);
+        this.reloadTableData();
       },
       targetEvent: event,
       title: `Set ${dataName}`,
