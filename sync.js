@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 require('dotenv').config({ silent: true });
 
-console.log(process.env.FIREBASE_PRIVATE_KEY);
 var admin = require("firebase-admin");
 admin.initializeApp({
   credential: admin.credential.cert({
