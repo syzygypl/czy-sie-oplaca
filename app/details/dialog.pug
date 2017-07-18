@@ -21,7 +21,7 @@ md-dialog
                     tr.total-row(md-row)
                         td(md-cell) <b>Total</b>
                         td(md-cell) <b>{{ $ctrl.version.total_budget >= 0 ? ($ctrl.version.total_budget | csoCurrency) : '-' }}</b>
-                        td(md-cell) <b>{{ $ctrl.version.total_timespent }}</b>
+                        td(md-cell) <b>{{ ($ctrl.version.total_timespent | csoToHours) }}</b>
                         td(md-cell) <b>{{ $ctrl.version.total_hours >= 0 ? $ctrl.version.total_hours : '-' }}</b>
                         td(md-cell) <b>{{ $ctrl.version.total_timespentCosts >= 0 ? ($ctrl.version.total_timespentCosts | csoCurrency) : '-' }}</b>
                         td(md-cell) <b>{{ $ctrl.version.total_costsEXT >= 0 ? $ctrl.version.total_costsEXT : '-' }}</b>
@@ -31,7 +31,7 @@ md-dialog
                         td(md-cell ng-click="$ctrl.editGroupData($event, data.originalGroupName, 'budget')")
                             span() {{ data.budget >= 0 ? (data.budget | csoCurrency) : '-' }}
                         td(md-cell)
-                            span() {{ data.timespent }}
+                            span() {{ data.timespent | csoToHours }}
                         td(md-cell ng-click="$ctrl.editGroupData($event, data.originalGroupName, 'hours')")
                             span() {{ data.hours >= 0 ? data.hours : '-' }}
                         td(md-cell)

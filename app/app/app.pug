@@ -34,7 +34,7 @@ div(layout="column" style="height: 100vh; overflow: auto")
                ng-repeat="version in $ctrl.versions | filter: search.query | orderBy: $ctrl.orderBy | limitTo: $ctrl.limit: ($ctrl.page - 1) * $ctrl.limit")
               td(md-cell): cso-details(version="version" settings="$ctrl.settings" local-settings="$ctrl.localSettings" data="$ctrl.data" app-ctrl="$ctrl")
               td(md-cell) {{ version.total_budget >= 0 ? (version.total_budget | csoCurrency) : '-' }}
-              td(md-cell) {{ version.total_timespent }}
+              td(md-cell) {{ version.total_timespent| csoToHours }}
               td(md-cell) {{ version.total_hours >= 0 ? version.total_hours : '-' }}
               td(md-cell) {{ version.total_timespentCosts >= 0 ? (version.total_timespentCosts | csoCurrency) : '-' }}
               td(md-cell) {{ version.total_costsEXT >= 0 ? (version.total_costsEXT | csoCurrency) : '-' }}

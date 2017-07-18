@@ -1,6 +1,6 @@
 {
   "name": "czy-sie-oplaca",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Visialization JIRA worklogs",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "angular-mocks": "^1.5.5",
     "angular-route": "^1.5.5",
     "angular-sanitize": "^1.5.5",
-    "angularfire": "^1.2.0",
+    "angularfire": "^2.3.0",
     "babel": "^6.5.2",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
@@ -32,7 +32,10 @@
     "css-loader": "^0.23.1",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
+    "firebase": "^3.9.0",
+    "firebase-admin": "^5.0.1",
     "jira-worklog": "github:syzygypl/jira-worklog",
+    "jsonwebtoken": "^7.4.1",
     "node-sass": "^3.7.0",
     "pug": "^2.0.0-alpha6",
     "pug-html-loader": "^1.0.5",

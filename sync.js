@@ -1,13 +1,21 @@
 #!/usr/bin/env node
 require('dotenv').config({ silent: true });
 
-const Firebase = require('firebase');
-const ref = new Firebase(process.env.FIREBASE_URL);
-ref.authWithCustomToken(process.env.FIREBASE_SECRET);
+console.log(process.env.FIREBASE_PRIVATE_KEY);
+var admin = require("firebase-admin");
+admin.initializeApp({
+  credential: admin.credential.cert({
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    privateKey: process.env.FIREBASE_PRIVATE_KEY,
+  }),
+  databaseURL: process.env.FIREBASE_DATABASE_URL
+});
+var db = admin.database();
 
-const versionsRef = ref.child('versions');
-const settingsRef = ref.child('settings');
-const worklogsRef = ref.child('worklogs');
+const versionsRef = db.ref('versions');
+const settingsRef = db.ref('settings');
+const worklogsRef = db.ref('worklogs');
 const timestamp = new Date().getTime();
 const exec = require('sync-exec');
 const cmd = './node_modules/.bin/jira-worklog'

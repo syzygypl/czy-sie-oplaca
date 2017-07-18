@@ -39,7 +39,14 @@ const configure = {
   },
   devtool: TARGET === 'develop' ? 'eval-source-map' : undefined,
   plugins: [
-    new webpack.EnvironmentPlugin(['FIREBASE_URL', 'FIREBASE_SECRET', 'JIRA_HOST']),
+    new webpack.EnvironmentPlugin([
+      'FIREBASE_JS_CLIENT_API_KEY',
+      'FIREBASE_JS_CLIENT_AUTH_DOMAIN',
+      'FIREBASE_DATABASE_URL',
+      'FIREBASE_JS_CLIENT_STORAGE_BUCKET',
+      'FIREBASE_JS_CLIENT_MESSAGING_SENDER_ID',
+      'JIRA_HOST'
+    ]),
   ],
 };
 

@@ -1,11 +1,8 @@
-import Firebase from 'firebase';
-const firebase = new Firebase(process.env.FIREBASE_URL);
-firebase.authWithCustomToken(process.env.FIREBASE_SECRET);
-
 import module from '../module';
 import template from './app.pug';
 import './app.scss';
 import CostsCalc from './costsCalc';
+import firebase from '../helpers/firebaseConnector';
 
 class App {
   constructor($firebaseArray, $firebaseObject, $mdEditDialog, $mdToast, $scope) {
@@ -13,7 +10,11 @@ class App {
     this.$mdToast = $mdToast;
     this.$scope = $scope;
 
-    this.settings = $firebaseObject(firebase.child('settings'));
+    // Firebase refs
+    this.settings = $firebaseObject(firebase.ref('settings'));
+    this.data = $firebaseArray(firebase.ref('versions'));
+    this.worklogs = $firebaseObject(firebase.ref('worklogs'));
+
     this.localSettings = {
       hideReleased: true,
       hideArchived: true,
@@ -25,9 +26,6 @@ class App {
     this.orderBy = 'projectKey';
     this.limit = 100;
     this.page = 1;
-
-    this.data = $firebaseArray(firebase.child('versions'));
-    this.worklogs = $firebaseObject(firebase.child('worklogs'));
     this.promise = Promise.all([this.data.$loaded(), this.worklogs.$loaded()]);
 
 

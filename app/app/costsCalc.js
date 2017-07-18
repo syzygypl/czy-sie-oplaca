@@ -49,7 +49,7 @@ export default class CostsCalc {
     }
 
     return {
-      cost: (wage || 0) * timespent,
+      cost: (wage || 0) * timespent / 3600,
       totalTime: timespent,
     };
   }
