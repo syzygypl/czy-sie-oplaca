@@ -1,10 +1,15 @@
 require('dotenv').config({ silent: true }); // Load local environment
-
 const express = require('express');
 const app = express();
 const basicAuth = require('basic-auth');
 var cookieParser = require('cookie-parser');
 var jwt = require('jsonwebtoken');
+
+var options = {
+  env: process.env.NODE_ENV || 'development',
+  port: process.env.PORT || 8080,
+  defaultPort: process.env.PORT || 8080,
+};
 
 const generateJWT = () => {
   // sign with RSA SHA256
@@ -26,7 +31,7 @@ const generateJWT = () => {
   return token;
 };
 
-app.set('port', (process.env.PORT));
+app.use(cookieParser());
 
 app.use((req, res, next) => {
   function unauthorized(authRes) {
@@ -55,9 +60,19 @@ app.use((req, res, next) => {
   return unauthorized(res);
 });
 
-app.use(cookieParser());
-app.use(express.static(`${process.cwd()}/build`));
 
-app.listen(app.get('port'), () => {
-  console.log('Node app is running on port', app.get('port'));
+if (options.env === 'development') {
+  var httpProxy = require('http-proxy');
+  var apiProxy = httpProxy.createProxyServer();
+  options.port = process.env.PROXY_PORT || 8081;
+
+  app.all("/*", function(req, res) {
+    apiProxy.web(req, res, {target: 'http://localhost:' + options.defaultPort});
+  });
+} else {
+  app.use(express.static(`${process.cwd()}/build`));
+}
+
+app.listen(options.port, () => {
+  console.log('Node app is running on port', options.port);
 });

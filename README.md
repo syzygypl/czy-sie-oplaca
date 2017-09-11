@@ -14,3 +14,4 @@ Create `.env` file (example in `.env-example`) with environment variables, and t
 npm install
 npm run develop
 ```
+Development server will run through proxy server running on PROXY_PORT env var or 8081 
